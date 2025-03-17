@@ -1,42 +1,458 @@
+/* Reset default margins and paddings */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body, html {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+
 #root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
+  width: 100%;
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+  text-align: left;
+}
+
+.app {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+main {
+  flex: 1;
+  width: 100%;
+  height: 100%;
+}
+
+/* Responsive breakpoints */
+/* Extra small devices (phones, 320px and up) */
+@media only screen and (min-width: 320px) {
+  .grid-container {
+    grid-template-columns: repeat(1, 1fr);
+    gap: 0.75rem;
+    padding: 0 0.5rem;
+  }
+  
+  h1 {
+    font-size: 1.5rem;
+  }
+  
+  h2 {
+    font-size: 1.25rem;
+  }
+  
+  .movie-card {
+    border-radius: 8px;
+  }
+  
+  .container {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+  }
+  
+  .search-input {
+    font-size: 0.9rem;
+    padding: 0.6rem 1rem 0.6rem 2.5rem;
+  }
+  
+  .search-icon {
+    left: 0.75rem;
+    font-size: 0.9rem;
+  }
+  
+  .button {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.85rem;
+  }
+}
+
+/* Small devices (phones, 480px and up) */
+@media only screen and (min-width: 480px) {
+  .grid-container {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+    padding: 0 0.75rem;
+  }
+  
+  h1 {
+    font-size: 1.75rem;
+  }
+  
+  h2 {
+    font-size: 1.4rem;
+  }
+  
+  .movie-card {
+    border-radius: 10px;
+  }
+  
+  .container {
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+  }
+  
+  .search-input {
+    font-size: 0.95rem;
+    padding: 0.7rem 1.25rem 0.7rem 2.75rem;
+  }
+  
+  .search-icon {
+    left: 1rem;
+    font-size: 1rem;
+  }
+  
+  .button {
+    padding: 0.6rem 1rem;
+    font-size: 0.9rem;
+  }
+}
+
+/* Medium devices (tablets, 768px and up) */
+@media only screen and (min-width: 768px) {
+  .grid-container {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    padding: 0 1rem;
+  }
+  
+  h1 {
+    font-size: 2rem;
+  }
+  
+  h2 {
+    font-size: 1.6rem;
+  }
+  
+  .movie-card {
+    border-radius: 12px;
+  }
+  
+  .container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+  
+  .search-input {
+    font-size: 1rem;
+    padding: 0.75rem 1.5rem 0.75rem 3rem;
+  }
+  
+  .search-icon {
+    left: 1.25rem;
+    font-size: 1.1rem;
+  }
+  
+  .button {
+    padding: 0.75rem 1.25rem;
+    font-size: 1rem;
+  }
+}
+
+/* Large devices (desktops, 992px and up) */
+@media only screen and (min-width: 992px) {
+  .grid-container {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2rem;
+  }
+  
+  h1 {
+    font-size: 2.25rem;
+  }
+  
+  h2 {
+    font-size: 1.8rem;
+  }
+}
+
+/* Extra large devices (large desktops, 1200px and up) */
+@media only screen and (min-width: 1200px) {
+  .grid-container {
+    grid-template-columns: repeat(5, 1fr);
+    gap: 2rem;
+  }
+  
+  h1 {
+    font-size: 2.5rem;
+  }
+  
+  h2 {
+    font-size: 2rem;
+  }
+}
+
+/* Loader animation */
+.loader {
+  width: 48px;
+  height: 48px;
+  border: 5px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 5px solid #3498db;
+  animation: spin 1s linear infinite;
+}
+
+@media (max-width: 480px) {
+  .loader {
+    width: 36px;
+    height: 36px;
+    border-width: 4px;
+    border-top-width: 4px;
+  }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.1);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.5);
+}
+
+/* Responsive container classes */
+.container {
+  width: 100%;
+  padding-right: 1rem;
+  padding-left: 1rem;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+@media (min-width: 320px) {
+  .container {
+    max-width: 100%;
+    padding-right: 0.5rem;
+    padding-left: 0.5rem;
+  }
+}
+
+@media (min-width: 576px) {
+  .container {
+    max-width: 540px;
+    padding-right: 0.75rem;
+    padding-left: 0.75rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .container {
+    max-width: 720px;
+    padding-right: 1rem;
+    padding-left: 1rem;
+  }
+}
+
+@media (min-width: 992px) {
+  .container {
+    max-width: 960px;
+    padding-right: 1.5rem;
+    padding-left: 1.5rem;
+  }
+}
+
+@media (min-width: 1200px) {
+  .container {
+    max-width: 1140px;
+    padding-right: 2rem;
+    padding-left: 2rem;
+  }
+}
+
+/* Fluid typography */
+html {
+  font-size: 14px;
+}
+
+@media (min-width: 320px) {
+  html {
+    font-size: 13px;
+  }
+  
+  .btn, button {
+    font-size: 0.85rem;
+    padding: 0.4rem 0.75rem;
+  }
+  
+  input, select, textarea {
+    font-size: 0.9rem;
+    padding: 0.5rem;
+  }
+}
+
+@media (min-width: 480px) {
+  html {
+    font-size: 14px;
+  }
+  
+  .btn, button {
+    font-size: 0.9rem;
+    padding: 0.5rem 1rem;
+  }
+  
+  input, select, textarea {
+    font-size: 0.95rem;
+    padding: 0.6rem;
+  }
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+  
+  .btn, button {
+    font-size: 1rem;
+    padding: 0.6rem 1.25rem;
+  }
+  
+  input, select, textarea {
+    font-size: 1rem;
+    padding: 0.75rem;
+  }
+}
+
+/* Common components styling */
+.card {
+  border-radius: 10px;
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+@media (max-width: 480px) {
+  .card {
+    border-radius: 8px;
+  }
+}
+
+.card:hover {
+  transform: translateY(-5px);
+}
+
+@media (max-width: 480px) {
+  .card:hover {
+    transform: translateY(-3px);
+  }
+}
+
+/* Button styles */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: 8px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+@media (max-width: 480px) {
+  .btn {
+    gap: 0.3rem;
+    border-radius: 6px;
+  }
+}
+
+/* Remove default focus outline and add custom focus styles */
+:focus {
+  outline: none;
+}
+
+:focus-visible {
+  outline: 2px solid #3498db;
+  outline-offset: 2px;
+}
+
+/* Improve touch target sizes for mobile */
+@media (max-width: 768px) {
+  button, 
+  a.btn,
+  .nav-link,
+  input[type="checkbox"],
+  input[type="radio"] {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}
+
+/* Responsive spacing utilities */
+.mt-1 { margin-top: 0.25rem; }
+.mt-2 { margin-top: 0.5rem; }
+.mt-3 { margin-top: 1rem; }
+.mt-4 { margin-top: 1.5rem; }
+.mt-5 { margin-top: 3rem; }
+
+.mb-1 { margin-bottom: 0.25rem; }
+.mb-2 { margin-bottom: 0.5rem; }
+.mb-3 { margin-bottom: 1rem; }
+.mb-4 { margin-bottom: 1.5rem; }
+.mb-5 { margin-bottom: 3rem; }
+
+.my-1 { margin-top: 0.25rem; margin-bottom: 0.25rem; }
+.my-2 { margin-top: 0.5rem; margin-bottom: 0.5rem; }
+.my-3 { margin-top: 1rem; margin-bottom: 1rem; }
+.my-4 { margin-top: 1.5rem; margin-bottom: 1.5rem; }
+.my-5 { margin-top: 3rem; margin-bottom: 3rem; }
+
+.mx-1 { margin-left: 0.25rem; margin-right: 0.25rem; }
+.mx-2 { margin-left: 0.5rem; margin-right: 0.5rem; }
+.mx-3 { margin-left: 1rem; margin-right: 1rem; }
+.mx-4 { margin-left: 1.5rem; margin-right: 1.5rem; }
+.mx-5 { margin-left: 3rem; margin-right: 3rem; }
+
+@media (max-width: 480px) {
+  .mt-5 { margin-top: 2rem; }
+  .mb-5 { margin-bottom: 2rem; }
+  .my-5 { margin-top: 2rem; margin-bottom: 2rem; }
+  .mx-5 { margin-left: 2rem; margin-right: 2rem; }
+}
+
+@media (max-width: 320px) {
+  .mt-5 { margin-top: 1.5rem; }
+  .mb-5 { margin-bottom: 1.5rem; }
+  .my-5 { margin-top: 1.5rem; margin-bottom: 1.5rem; }
+  .mx-5 { margin-left: 1.5rem; margin-right: 1.5rem; }
+}
+
+/* Responsive text alignment */
+.text-center {
   text-align: center;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
-}
-
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
+@media (min-width: 768px) {
+  .text-md-left {
+    text-align: left;
   }
-  to {
-    transform: rotate(360deg);
+  
+  .text-md-center {
+    text-align: center;
   }
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
+  
+  .text-md-right {
+    text-align: right;
   }
-}
-
-.card {
-  padding: 2em;
-}
-
-.read-the-docs {
-  color: #888;
 }
