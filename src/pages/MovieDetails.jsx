@@ -188,7 +188,7 @@ function MovieDetails() {
         position: 'relative',
         height: '70vh',
         overflow: 'hidden',
-        backgroundImage: `linear-gradient(to bottom, rgba(0,0,0,0.1), ${theme.background}), url(${currentMovie.Poster !== 'N/A' ? currentMovie.Poster : 'https://via.placeholder.com/1200x600?text=No+Backdrop'})`,
+        backgroundImage: `linear-gradient(to bottom, rgba(0,0,0,0.1), ${theme.background}), url(${currentMovie.Poster !== 'N/A' ? currentMovie.Poster : '/placeholder.jpg'})`,
         backgroundSize: 'cover',
         backgroundPosition: 'center top',
         backgroundRepeat: 'no-repeat',
@@ -238,13 +238,17 @@ function MovieDetails() {
               overflow: 'hidden'
             }}>
               <img
-                src={currentMovie.Poster !== 'N/A' ? currentMovie.Poster : 'https://via.placeholder.com/300x450?text=No+Poster'}
+                src={currentMovie.Poster !== 'N/A' ? currentMovie.Poster : '/placeholder.jpg'}
                 alt={currentMovie.Title}
                 style={{
                   width: '100%',
                   height: 'auto',
                   display: 'block',
                   borderRadius: screenWidth <= 480 ? '10px' : '12px'
+                }}
+                onError={(e) => {
+                  e.target.onerror = null; 
+                  e.target.src = '/placeholder.jpg';
                 }}
               />
               {/* Favorite Button */}
