@@ -89,15 +89,15 @@ function Home() {
   // Handle page change
   const handlePageChange = (newPage) => {
     if (newPage >= 1 && newPage <= totalPages) {
+      // Only update the page and fetch new results
       dispatch(setCurrentPage(newPage));
       dispatch(searchMovies({ query: searchTerm, page: newPage }));
       
-      // Force scroll to top - use setTimeout to ensure it happens after state updates
-      setTimeout(() => {
-        window.scrollTo(0, 0);
-        document.documentElement.scrollTop = 0; // Alternative method for better browser support
-        document.body.scrollTop = 0; // For Safari
-      }, 100);
+      // Smooth scroll just the results container into view
+      const resultsContainer = document.querySelector('.movie-results-container');
+      if (resultsContainer) {
+        resultsContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
     }
   };
 
@@ -219,29 +219,77 @@ function Home() {
     if (status === 'failed') {
       return (
         <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
           style={{
-            backgroundColor: theme.card,
-            padding: '1.5rem',
-            borderRadius: '12px',
-            marginTop: '2rem',
+            backgroundColor: isDarkMode ? 'rgba(255, 255, 255, 0.1)' : theme.card,
+            padding: '2.5rem',
+            borderRadius: '16px',
             textAlign: 'center',
-            color: '#e74c3c',
-            boxShadow: isDarkMode ? '0 4px 6px rgba(0, 0, 0, 0.1)' : '0 4px 6px rgba(0, 0, 0, 0.08)',
-            border: `1px solid ${theme.border}`
+            boxShadow: isDarkMode ? '0 4px 15px rgba(0, 0, 0, 0.1)' : '0 4px 15px rgba(0, 0, 0, 0.05)',
+            border: isDarkMode ? '1px solid rgba(255, 255, 255, 0.1)' : `1px solid ${theme.border}`,
+            marginTop: '2rem'
           }}
         >
+          <div style={{ 
+            fontSize: '4rem', 
+            marginBottom: '1.5rem',
+            color: '#e74c3c'
+          }}>
+            ⚠️
+          </div>
+          <h2 style={{ 
+            color: theme.text, 
+            fontSize: '1.8rem', 
+            marginBottom: '1rem',
+            fontWeight: 'bold'
+          }}>
+            Search Error
+          </h2>
           <p style={{ 
             fontSize: '1.1rem', 
-            marginBottom: '0.5rem',
-            wordBreak: 'break-word'
+            marginBottom: '1rem', 
+            color: isDarkMode ? '#ff6b6b' : '#e74c3c',
+            padding: '0 0.5rem',
+            maxWidth: '600px',
+            margin: '0 auto 1rem',
+            fontWeight: '500'
           }}>
-            Error: {error || 'Something went wrong during search.'}
+            {error || 'Something went wrong during search.'}
           </p>
-          <p style={{ fontSize: '1rem' }}>
-            Please try another search term or try again later.
+          <p style={{ 
+            fontSize: '1rem', 
+            opacity: 0.8,
+            padding: '0 0.5rem',
+            color: theme.text,
+            maxWidth: '500px',
+            margin: '0 auto 1.5rem'
+          }}>
+            Please try using a more specific search term or try again later.
           </p>
+          
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={() => {
+              setSearchTerm('');
+              dispatch(clearSearchResults());
+            }}
+            style={{
+              backgroundColor: isDarkMode ? 'rgba(255, 255, 255, 0.1)' : '#f5f5f5',
+              color: theme.text,
+              border: `1px solid ${theme.border}`,
+              borderRadius: '8px',
+              padding: '10px 20px',
+              fontWeight: '500',
+              cursor: 'pointer',
+              boxShadow: isDarkMode ? '0 2px 8px rgba(0, 0, 0, 0.2)' : '0 2px 8px rgba(0, 0, 0, 0.05)',
+              transition: 'all 0.2s ease'
+            }}
+          >
+            Clear Search
+          </motion.button>
         </motion.div>
       );
     }
@@ -326,6 +374,7 @@ function Home() {
           </motion.div>
 
           <motion.div
+            key={`search-results-page-${currentPage}`}
             variants={containerVariants}
             initial="hidden"
             animate="visible"

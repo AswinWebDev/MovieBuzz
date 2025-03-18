@@ -7,6 +7,15 @@ import { colors } from '../../styles/theme';
 // Simple utility function to combine class names
 const cn = (...inputs) => inputs.filter(Boolean).join(' ');
 
+// Add CSS for responsive lamp width
+const responsiveLampStyle = `
+  @media (max-width: 600px) {
+    .responsive-lamp {
+      width: 20rem !important;
+    }
+  }
+`;
+
 export const LampContainer = ({
   children,
   className,
@@ -23,9 +32,12 @@ export const LampContainer = ({
       )}
       style={{ backgroundColor: bgColor }}
     >
+      {/* Add style tag for responsive lamp width */}
+      <style dangerouslySetInnerHTML={{ __html: responsiveLampStyle }} />
+      
       <div className="relative flex w-full flex-1 scale-y-125 items-center justify-center isolate z-0 ">
         <motion.div
-          initial={{ opacity: 0.5, width: "15rem" }}
+          initial={{ opacity: 0.5, width: "5rem" }}
           animate={{ opacity: 1, width: "30rem" }}
           transition={{
             delay: 0.3,
@@ -41,6 +53,7 @@ export const LampContainer = ({
             overflow: 'visible',
             width: '30rem',
           }}
+          className="responsive-lamp"
         >
           <div style={{
             position: 'absolute',
@@ -64,7 +77,7 @@ export const LampContainer = ({
           }} />
         </motion.div>
         <motion.div
-          initial={{ opacity: 0.5, width: "15rem" }}
+          initial={{ opacity: 0.5, width: "5rem" }}
           animate={{ opacity: 1, width: "30rem" }}
           transition={{
             delay: 0.3,
@@ -79,6 +92,7 @@ export const LampContainer = ({
             height: '14rem',
             width: '30rem',
           }}
+          className="responsive-lamp"
         >
           <div style={{
             position: 'absolute',
@@ -142,7 +156,7 @@ export const LampContainer = ({
           }}
         ></motion.div> */}
         <motion.div
-          initial={{ width: "15rem" }}
+          initial={{ width: "5rem" }}
           animate={{ width: "30rem" }}
           transition={{
             delay: 0.3,
@@ -158,6 +172,7 @@ export const LampContainer = ({
             transform: 'translateY(-7rem)',
             backgroundColor: '#22d3ee'
           }}
+          className="responsive-lamp"
         ></motion.div>
 
         <div style={{
