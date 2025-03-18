@@ -222,7 +222,7 @@ function MovieDetails() {
       {/* Hero Section with High-Res Backdrop */}
       <div style={{
         position: 'relative',
-        height: screenWidth <= 480 ? '60vh' : '70vh',
+        height: screenWidth <= 480 ? '55vh' : screenWidth <= 768 ? '60vh' : '70vh',
         overflow: 'hidden'
       }}>
         <motion.div
@@ -349,8 +349,8 @@ function MovieDetails() {
         margin: '0 auto',
         padding: screenWidth <= 480 ? '0 1rem' : '0 2rem',
         position: 'relative',
-        zIndex: 2000,
-        marginTop: '-70px'
+        zIndex: 3000,
+        marginTop: screenWidth <= 768 ? '-40px' : '-70px'
       }}>
         <motion.div
           variants={staggeredFadeIn}
@@ -359,11 +359,11 @@ function MovieDetails() {
           style={{
             display: 'grid',
             gridTemplateColumns: screenWidth <= 768 ? '1fr' : '300px 1fr',
-            gap: screenWidth <= 480 ? '2rem' : '3rem',
+            gap: screenWidth <= 768 ? '1.5rem' : '3rem',
             width: '100%',
             maxWidth: '1100px',
             margin: '0 auto',
-            padding: screenWidth <= 768 ? '2rem 0' : '3rem 0',
+            padding: screenWidth <= 768 ? '1.5rem 0' : '3rem 0',
           }}
         >
           {/* Movie Poster */}
