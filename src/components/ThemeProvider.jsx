@@ -1,7 +1,11 @@
-import { useSelector } from 'react-redux';
-import { colors } from '../styles/theme';
+import { useSelector, useDispatch } from 'react-redux';
+import { motion } from 'framer-motion';
+import { FaSun, FaMoon } from 'react-icons/fa';
+import { toggleTheme } from '../store/themeSlice';
+import { colors, shadows } from '../styles/theme';
 
 function ThemeProvider({ children }) {
+  const dispatch = useDispatch();
   const isDarkMode = useSelector((state) => state.theme.isDarkMode);
   const theme = isDarkMode ? colors.dark : colors.light;
 

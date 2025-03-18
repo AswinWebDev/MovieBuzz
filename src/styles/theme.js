@@ -25,10 +25,26 @@ export const fonts = {
 };
 
 export const breakpoints = {
-  sm: '640px',
-  md: '768px',
-  lg: '1024px',
-  xl: '1280px'
+  xs: '320px',   // Extra small devices (phones)
+  sm: '480px',   // Small devices (large phones)
+  md: '768px',   // Medium devices (tablets)
+  lg: '992px',   // Large devices (desktops)
+  xl: '1200px'   // Extra large devices (large desktops)
+};
+
+export const mediaQueries = {
+  xs: `@media (max-width: ${breakpoints.xs})`,
+  sm: `@media (max-width: ${breakpoints.sm})`,
+  md: `@media (max-width: ${breakpoints.md})`,
+  lg: `@media (max-width: ${breakpoints.lg})`,
+  xl: `@media (max-width: ${breakpoints.xl})`,
+  
+  // Min width queries (from this breakpoint and up)
+  xsUp: `@media (min-width: ${breakpoints.xs})`,
+  smUp: `@media (min-width: ${breakpoints.sm})`,
+  mdUp: `@media (min-width: ${breakpoints.md})`,
+  lgUp: `@media (min-width: ${breakpoints.lg})`,
+  xlUp: `@media (min-width: ${breakpoints.xl})`
 };
 
 export const transitions = {
