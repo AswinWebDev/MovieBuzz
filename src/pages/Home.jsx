@@ -2,7 +2,7 @@ import { useState, useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FaHeart, FaStar, FaSearch, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
+import { FaHeart, FaStar, FaSearch, FaChevronLeft, FaChevronRight, FaPlay, FaCalendarAlt, FaFilm, FaInfo, FaInfoCircle } from 'react-icons/fa';
 import debounce from 'lodash.debounce';
 import { addToFavorites, removeFromFavorites } from '../store/favoritesSlice';
 import { searchMovies, clearSearchResults, setCurrentPage } from '../store/movieSlice';
@@ -390,122 +390,285 @@ function Home() {
                 key={movie.imdbID}
                 variants={itemVariants}
                 style={{
-                  backgroundColor: isDarkMode ? 'rgba(255, 255, 255, 0.1)' : theme.card,
-                  borderRadius: '12px',
+                  backgroundColor: 'transparent',
+                  borderRadius: '16px',
                   overflow: 'hidden',
-                  boxShadow: isDarkMode ? '0 4px 6px rgba(0, 0, 0, 0.1)' : shadows.light.md,
-                  border: isDarkMode ? '1px solid rgba(255, 255, 255, 0.1)' : `1px solid ${theme.border}`,
-                  transition: 'all 0.3s ease',
+                  position: 'relative',
+                  transition: 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
                   height: '100%',
                   display: 'flex',
-                  flexDirection: 'column'
+                  flexDirection: 'column',
+                  aspectRatio: '2/3',
+                  perspective: '1000px'
                 }}
-                whileHover={{
-                  y: -5,
-                  boxShadow: isDarkMode ? '0 10px 25px rgba(0, 0, 0, 0.2)' : '0 10px 25px rgba(0, 0, 0, 0.1)',
-                  borderColor: '#f59e0b'
-                }}
+                whileHover="hover"
+                initial="initial"
               >
-                <Link 
-                  to={`/movie/${movie.imdbID}`} 
-                  style={{ 
-                    textDecoration: 'none', 
-                    color: 'inherit',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    flex: 1
+                <motion.div
+                  style={{
+                    position: 'absolute',
+                    inset: '0',
+                    zIndex: 1,
+                    borderRadius: '16px',
+                    overflow: 'hidden',
+                    boxShadow: isDarkMode 
+                      ? '0 10px 30px -5px rgba(0, 0, 0, 0.8), 0 0 5px rgba(0, 0, 0, 0.5) inset, 0 0 20px rgba(34, 211, 238, 0.15)'
+                      : '0 10px 30px -5px rgba(0, 0, 0, 0.3), 0 0 5px rgba(0, 0, 0, 0.1) inset, 0 0 20px rgba(112, 119, 161, 0.15)',
+                    background: isDarkMode 
+                      ? 'linear-gradient(145deg, rgba(30, 30, 30, 0.7), rgba(15, 15, 15, 0.9))' 
+                      : 'linear-gradient(145deg, rgba(255, 255, 255, 0.8), rgba(240, 240, 240, 0.9))',
+                    backdropFilter: 'blur(8px)',
+                    transformStyle: 'preserve-3d',
+                    transform: 'translateZ(0)',
+                    border: isDarkMode
+                      ? '1px solid rgba(255, 255, 255, 0.1)'
+                      : '1px solid rgba(0, 0, 0, 0.05)'
+                  }}
+                  variants={{
+                    initial: { 
+                      transform: 'rotateY(0deg) translateZ(0)',
+                    },
+                    hover: { 
+                      transform: 'rotateY(0deg) translateZ(10px)',
+                      boxShadow: isDarkMode 
+                        ? '0 20px 40px -5px rgba(0, 0, 0, 0.9), 0 0 5px rgba(0, 0, 0, 0.5) inset, 0 0 30px rgba(34, 211, 238, 0.25)'
+                        : '0 20px 40px -5px rgba(0, 0, 0, 0.4), 0 0 5px rgba(0, 0, 0, 0.1) inset, 0 0 30px rgba(112, 119, 161, 0.25)',
+                      transition: { duration: 0.4 }
+                    }
                   }}
                 >
-                  <div style={{ position: 'relative' }}>
-                    {movie.Poster && movie.Poster !== 'N/A' ? (
-                      <img 
-                        src={movie.Poster} 
-                        alt={movie.Title}
-                        style={{
-                          width: '100%',
-                          aspectRatio: '2/3',
-                          objectFit: 'cover',
-                          display: 'block'
-                        }}
-                        loading="lazy"
-                      />
-                    ) : (
-                      <div style={{
-                        width: '100%',
-                        aspectRatio: '2/3',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        backgroundColor: isDarkMode ? 'rgba(15, 23, 42, 0.5)' : 'rgba(45, 50, 80, 0.1)',
-                        color: theme.text,
-                        fontSize: '3rem',
-                        opacity: 0.5
-                      }}>
-                        🎬
-                      </div>
-                    )}
-                    <motion.button
-                      onClick={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        toggleFavorite(movie);
-                      }}
-                      whileHover={{ scale: 1.1 }}
-                      whileTap={{ scale: 0.9 }}
-                      style={{
-                        position: 'absolute',
-                        top: '12px',
-                        right: '12px',
-                        backgroundColor: isInFavorites(movie.imdbID) ? 'rgba(255,107,107,0.9)' : 'rgba(0,0,0,0.6)',
-                        color: '#fff',
-                        border: 'none',
-                        borderRadius: '50%',
-                        width: '50px',
-                        height: '50px',
-                        display: 'flex',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        cursor: 'pointer',
-                        boxShadow: '0 4px 10px rgba(0,0,0,0.2)',
-                        backdropFilter: 'blur(4px)',
-                        fontSize: '1.2rem',
-                        zIndex: 10,
-                        transition: 'all 0.2s ease'
-                      }}
-                    >
-                      <FaHeart />
-                    </motion.button>
-                  </div>
-                  <div style={{ padding: '1rem', flex: 1, display: 'flex', flexDirection: 'column' }}>
-                    <h3 style={{ 
-                      fontSize: '1rem', 
-                      fontWeight: 600, 
-                      marginBottom: '0.5rem',
-                      color: theme.text,
-                      lineHeight: 1.3
-                    }}>
-                      {movie.Title}
-                    </h3>
+                  <Link 
+                    to={`/movie/${movie.imdbID}`} 
+                    style={{ 
+                      textDecoration: 'none', 
+                      color: 'inherit',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      height: '100%',
+                      position: 'relative',
+                      zIndex: 1
+                    }}
+                  >
                     <div style={{ 
-                      display: 'flex', 
-                      alignItems: 'center', 
-                      marginTop: 'auto',
-                      color: isDarkMode ? '#94a3b8' : theme.secondary,
-                      fontSize: '0.875rem'
+                      position: 'relative', 
+                      overflow: 'hidden',
+                      height: '100%',
                     }}>
-                      <span>{movie.Year}</span>
-                      <span style={{ margin: '0 6px' }}>•</span>
-                      <span style={{ 
-                        display: 'flex', 
-                        alignItems: 'center',
-                        textTransform: 'capitalize',
-                        color: movie.Type === 'movie' ? '#4ade80' : '#8b5cf6'
-                      }}>
-                        {movie.Type || 'N/A'}
-                      </span>
+                      {/* Poster Image or Placeholder */}
+                      {movie.Poster && movie.Poster !== 'N/A' ? (
+                        <motion.div
+                          style={{
+                            width: '100%',
+                            height: '100%',
+                            position: 'relative'
+                          }}
+                          variants={{
+                            initial: { scale: 1 },
+                            hover: { scale: 1.05, transition: { duration: 0.7 } }
+                          }}
+                        >
+                          <div style={{
+                            position: 'absolute',
+                            inset: 0,
+                            background: isDarkMode 
+                              ? 'linear-gradient(0deg, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0) 50%, rgba(0,0,0,0.3) 100%)'
+                              : 'linear-gradient(0deg, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0) 50%, rgba(0,0,0,0.2) 100%)',
+                            zIndex: 10
+                          }}/>
+                          <img 
+                            src={movie.Poster} 
+                            alt={movie.Title}
+                            style={{
+                              width: '100%',
+                              height: '100%',
+                              objectFit: 'cover',
+                              display: 'block'
+                            }}
+                            loading="lazy"
+                          />
+                        </motion.div>
+                      ) : (
+                        <div style={{
+                          width: '100%',
+                          height: '100%',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          background: isDarkMode 
+                            ? 'linear-gradient(135deg, #1a1a1a 0%, #2d3250 100%)' 
+                            : 'linear-gradient(135deg, #f0f0f0 0%, #e6e9f0 100%)',
+                          color: theme.text
+                        }}>
+                          <FaFilm size={48} style={{ opacity: 0.5 }} />
+                        </div>
+                      )}
+
+                      {/* Movie Title Overlay */}
+                      <motion.div 
+                        style={{
+                          position: 'absolute',
+                          bottom: 0,
+                          left: 0,
+                          right: 0,
+                          padding: '1.5rem 1.2rem',
+                          zIndex: 20
+                        }}
+                        variants={{
+                          initial: { y: 0 },
+                          hover: { y: 0 }
+                        }}
+                      >
+                        <motion.h3 
+                          style={{ 
+                            fontSize: '1.1rem', 
+                            fontWeight: 700, 
+                            marginBottom: '0.5rem',
+                            color: 'white',
+                            textShadow: '0 2px 4px rgba(0,0,0,0.5)',
+                            lineHeight: 1.3
+                          }}
+                          variants={{
+                            initial: { opacity: 1 },
+                            hover: { opacity: 1 }
+                          }}
+                        >
+                          {movie.Title}
+                        </motion.h3>
+                        
+                        <motion.div 
+                          style={{ 
+                            display: 'flex', 
+                            alignItems: 'center', 
+                            gap: '10px',
+                            color: 'rgba(255,255,255,0.9)',
+                            fontSize: '0.85rem'
+                          }}
+                          variants={{
+                            initial: { opacity: 0.7 },
+                            hover: { opacity: 1 }
+                          }}
+                        >
+                          <div style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '4px'
+                          }}>
+                            <FaCalendarAlt size={12} />
+                            <span>{movie.Year}</span>
+                          </div>
+                          
+                          <span style={{ fontSize: '0.5rem' }}>•</span>
+                          
+                          <div style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '4px',
+                            padding: '2px 8px',
+                            borderRadius: '4px',
+                            fontSize: '0.75rem',
+                            fontWeight: '500',
+                            backgroundColor: movie.Type === 'movie' 
+                              ? 'rgba(74, 222, 128, 0.2)' 
+                              : 'rgba(139, 92, 246, 0.2)',
+                            color: movie.Type === 'movie' 
+                              ? '#4ade80' 
+                              : '#8b5cf6'
+                          }}>
+                            <span style={{ textTransform: 'capitalize' }}>{movie.Type || 'N/A'}</span>
+                          </div>
+                        </motion.div>
+                      </motion.div>
+
+                      {/* Movie Info Badge */}
+                      <motion.div
+                        style={{
+                          position: 'absolute',
+                          top: '12px',
+                          left: '12px',
+                          zIndex: 20,
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          backgroundColor: 'rgba(0, 0, 0, 0.7)',
+                          backdropFilter: 'blur(4px)',
+                          borderRadius: '50px',
+                          padding: '6px 12px',
+                          border: '1px solid rgba(255, 255, 255, 0.1)'
+                        }}
+                        variants={{
+                          initial: { opacity: 0, x: -20 },
+                          hover: { 
+                            opacity: 1, 
+                            x: 0,
+                            transition: { 
+                              duration: 0.3, 
+                              delay: 0.15 
+                            } 
+                          }
+                        }}
+                      >
+                        <FaInfoCircle size={12} color="#f59e0b" style={{ marginRight: '6px' }} />
+                        <span style={{ 
+                          fontSize: '0.7rem', 
+                          color: 'rgba(255, 255, 255, 0.9)',
+                          fontWeight: '500'
+                        }}>
+                          View Details
+                        </span>
+                      </motion.div>
                     </div>
-                  </div>
-                </Link>
+                  </Link>
+                </motion.div>
+                
+                {/* Favorite Button */}
+                <motion.button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    toggleFavorite(movie);
+                  }}
+                  variants={{
+                    initial: { 
+                      opacity: 0.9, 
+                      scale: 1,
+                      boxShadow: '0 4px 10px rgba(0,0,0,0.2)'
+                    },
+                    hover: { 
+                      opacity: 1, 
+                      scale: 1.1, 
+                      boxShadow: '0 8px 20px rgba(0,0,0,0.3)',
+                      transition: { 
+                        duration: 0.2, 
+                        delay: 0.1 
+                      }
+                    }
+                  }}
+                  whileTap={{ scale: 0.9 }}
+                  style={{
+                    position: 'absolute',
+                    top: '12px',
+                    right: '12px',
+                    backgroundColor: isInFavorites(movie.imdbID) 
+                      ? 'rgba(255, 86, 86, 0.9)' 
+                      : 'rgba(0, 0, 0, 0.7)',
+                    color: '#fff',
+                    border: isInFavorites(movie.imdbID)
+                      ? '1px solid rgba(255, 86, 86, 0.3)'
+                      : '1px solid rgba(255, 255, 255, 0.1)',
+                    borderRadius: '50%',
+                    width: '40px',
+                    height: '40px',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    cursor: 'pointer',
+                    backdropFilter: 'blur(4px)',
+                    zIndex: 30,
+                    transition: 'all 0.3s ease'
+                  }}
+                  aria-label={isInFavorites(movie.imdbID) ? "Remove from favorites" : "Add to favorites"}
+                >
+                  <FaHeart size={16} />
+                </motion.button>
               </motion.div>
             ))}
           </motion.div>
