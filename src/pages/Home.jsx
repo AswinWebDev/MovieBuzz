@@ -481,7 +481,9 @@ function Home() {
       <div className="hero-container" style={{
         position: 'relative',
         width: '100%',
-        minHeight: '75vh',
+        minHeight: '40vh', 
+        maxHeight: '450px', 
+        overflow: 'hidden'
       }}>
         {/* Properly using LampContainer with content as children */}
         <LampContainer>
@@ -490,7 +492,8 @@ function Home() {
             zIndex: 2,
             width: '100%',
             textAlign: 'center',
-            marginTop: '6rem' // Add some top margin to position content below the lamp's beam
+            marginTop: '4rem', 
+            paddingBottom: '0'
           }}>
             <motion.h1
               initial={{ opacity: 0, y: 20 }}
@@ -499,7 +502,7 @@ function Home() {
               style={{
                 fontSize: 'clamp(2.5rem, 5vw, 4rem)',
                 fontWeight: 'bold',
-                marginBottom: '1rem',
+                marginBottom: '0.5rem', 
                 background: 'linear-gradient(to right, #f59e0b, #ef4444)',
                 WebkitBackgroundClip: 'text',
                 WebkitTextFillColor: 'transparent',
@@ -515,10 +518,10 @@ function Home() {
               transition={{ duration: 0.5, delay: 0.1 }}
               style={{
                 fontSize: 'clamp(1rem, 2vw, 1.2rem)',
-                marginBottom: '2rem',
+                marginBottom: '1rem', 
                 color: theme.text,
                 maxWidth: '600px',
-                margin: '0 auto 2rem',
+                margin: '0 auto 1rem', 
                 textAlign: 'center'
               }}
             >
@@ -534,7 +537,7 @@ function Home() {
                 width: '100%',
                 maxWidth: '500px',
                 position: 'relative',
-                margin: '0 auto'
+                margin: '0 auto 0' 
               }}
             >
               <div style={{
@@ -576,11 +579,11 @@ function Home() {
         </LampContainer>
       </div>
 
-      {/* Movie Results Section */}
+      {/* Movie Results Section - positioned much closer to search */}
       <div className="movie-results-container" style={{ 
-        padding: '2rem 1rem',
+        padding: '0 1rem 1rem',
         maxWidth: '1280px',
-        margin: '0 auto',
+        margin: '60px auto 0', 
         position: 'relative',
         zIndex: 5,
         backgroundColor: isDarkMode ? '#0f172a' : theme.background
