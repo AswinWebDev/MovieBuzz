@@ -247,7 +247,7 @@ function Home() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
           style={{
-            backgroundColor: isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.05)',
+            backgroundColor: isDarkMode ? 'rgba(255, 255, 255, 0.1)' : theme.card,
             padding: '3rem',
             borderRadius: '16px',
             textAlign: 'center',
@@ -399,22 +399,26 @@ function Home() {
                       whileTap={{ scale: 0.9 }}
                       style={{
                         position: 'absolute',
-                        top: '10px',
-                        right: '10px',
-                        backgroundColor: 'rgba(0, 0, 0, 0.6)',
+                        top: '12px',
+                        right: '12px',
+                        backgroundColor: isInFavorites(movie.imdbID) ? 'rgba(255,107,107,0.9)' : 'rgba(0,0,0,0.6)',
+                        color: '#fff',
                         border: 'none',
                         borderRadius: '50%',
-                        width: '36px',
-                        height: '36px',
+                        width: '50px',
+                        height: '50px',
                         display: 'flex',
-                        alignItems: 'center',
                         justifyContent: 'center',
+                        alignItems: 'center',
                         cursor: 'pointer',
-                        color: isInFavorites(movie.imdbID) ? '#e74c3c' : '#fff',
+                        boxShadow: '0 4px 10px rgba(0,0,0,0.2)',
+                        backdropFilter: 'blur(4px)',
+                        fontSize: '1.2rem',
+                        zIndex: 10,
                         transition: 'all 0.2s ease'
                       }}
                     >
-                      <FaHeart size={16} />
+                      <FaHeart />
                     </motion.button>
                   </div>
                   <div style={{ padding: '1rem', flex: 1, display: 'flex', flexDirection: 'column' }}>
