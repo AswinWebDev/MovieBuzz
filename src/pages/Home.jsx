@@ -90,130 +90,102 @@ function Home() {
       color: theme.text,
       padding: '0'
     }}>
-      {/* Hero Section */}
-      <motion.div
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
-        style={{
-          textAlign: 'center',
-          padding: '4rem 1rem',
-          background: `linear-gradient(to bottom, ${theme.primary}, ${theme.accent})`,
-          position: 'relative',
-          overflow: 'hidden'
-        }}
-      >
-        {/* Background decoration */}
-        <motion.div 
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 0.1, scale: 1 }}
-          transition={{ duration: 1.5 }}
+      {/* Main Content Section */}
+      <div style={{ padding: '4rem 1rem', textAlign: 'center' }}>
+        {/* Title and Description */}
+        <motion.h1 
           style={{
-            position: 'absolute',
-            top: '-10%',
-            left: '-5%',
-            width: '120%',
-            height: '120%',
-            backgroundImage: `url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-.895-2-2-2-2 .895-2 2 .895 2 2 2zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.657 0 3-1.343 3-3s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23${isDarkMode ? 'ffffff' : '000000'}' fill-opacity='0.1' fill-rule='evenodd'/%3E%3C/svg%3E")`,
-            pointerEvents: 'none',
-            zIndex: 0
+            fontSize: 'clamp(2rem, 5vw, 3.5rem)',
+            fontWeight: '800',
+            color: theme.primary,
+            marginBottom: '1rem',
+            fontFamily: fonts.heading
           }}
-        />
-
-        <div style={{ position: 'relative', zIndex: 1 }}>
-          <motion.h1 
-            style={{
-              fontSize: 'clamp(2rem, 5vw, 3.5rem)',
-              fontWeight: '800',
-              color: theme.primary,
-              marginBottom: '1rem',
-              fontFamily: fonts.heading
-            }}
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.2, duration: 0.5 }}
-          >
-            Movie<motion.span
-              initial={{ opacity: 0, y: -20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.4, duration: 0.5 }}
-              style={{ color: theme.accent }}
-            >
-              Buzz
-            </motion.span>
-          </motion.h1>
-          <motion.p 
-            style={{ 
-              fontSize: 'clamp(1rem, 2vw, 1.2rem)',
-              maxWidth: '600px',
-              margin: '0 auto 1.5rem',
-              opacity: 0.9,
-              lineHeight: 1.6
-            }}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.6, duration: 0.5 }}
-          >
-            Discover your next favorite movie with our extensive collection. Search, explore, and save your favorites all in one place.
-          </motion.p>
-          
-          {/* Search input */}
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.2, duration: 0.5 }}
+        >
+          Movie<motion.span
+            initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.8, duration: 0.5 }}
-            style={{
-              maxWidth: '600px',
-              width: '100%',
-              margin: '0 auto',
-              position: 'relative',
-              padding: '0 16px'
-            }}
+            transition={{ delay: 0.4, duration: 0.5 }}
+            style={{ color: theme.accent }}
           >
-            <div style={{
-              position: 'relative',
-              display: 'flex',
-              alignItems: 'center',
-              boxShadow: isInputFocused 
-                ? isDarkMode ? '0 0 0 3px rgba(255, 255, 255, 0.2)' : '0 0 0 3px rgba(0, 0, 0, 0.1)'
-                : isDarkMode ? shadows.dark.md : shadows.light.md,
-              borderRadius: '24px',
-              transition: transitions.default,
-              backgroundColor: theme.card,
-              border: `1px solid ${isInputFocused ? theme.accent : theme.border}`
-            }}>
-              <FaSearch style={{ 
-                marginLeft: '16px', 
-                color: isInputFocused ? theme.accent : theme.text,
-                opacity: 0.7,
-                transition: 'color 0.3s ease',
-                fontSize: window.innerWidth <= 480 ? '0.9rem' : '1rem'
-              }} />
-              <input
-                type="text"
-                value={searchTerm}
-                onChange={handleSearchChange}
-                onFocus={() => setIsInputFocused(true)}
-                onBlur={() => setIsInputFocused(false)}
-                placeholder="Search for movies..."
-                style={{
-                  flex: 1,
-                  padding: window.innerWidth <= 480 ? '12px 16px' : '16px',
-                  fontSize: window.innerWidth <= 480 ? '0.9rem' : '1rem',
-                  border: 'none',
-                  outline: 'none',
-                  backgroundColor: 'transparent',
-                  color: theme.text,
-                  width: '100%',
-                  borderRadius: '24px'
-                }}
-              />
-            </div>
-          </motion.div>
-        </div>
-      </motion.div>
+            Buzz
+          </motion.span>
+        </motion.h1>
+        
+        <motion.p 
+          style={{ 
+            fontSize: 'clamp(1rem, 2vw, 1.2rem)',
+            maxWidth: '600px',
+            margin: '0 auto 1.5rem',
+            opacity: 0.9,
+            lineHeight: 1.6
+          }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.6, duration: 0.5 }}
+        >
+          Discover your next favorite movie with our extensive collection. Search, explore, and save your favorites all in one place.
+        </motion.p>
+        
+        {/* Search input */}
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.8, duration: 0.5 }}
+          style={{
+            maxWidth: '600px',
+            width: '100%',
+            margin: '0 auto',
+            position: 'relative',
+            padding: '0 16px'
+          }}
+        >
+          <div style={{
+            position: 'relative',
+            display: 'flex',
+            alignItems: 'center',
+            boxShadow: isInputFocused 
+              ? isDarkMode ? '0 0 0 3px rgba(255, 255, 255, 0.2)' : '0 0 0 3px rgba(0, 0, 0, 0.1)'
+              : isDarkMode ? shadows.dark.md : shadows.light.md,
+            borderRadius: '24px',
+            transition: transitions.default,
+            backgroundColor: theme.card,
+            border: `1px solid ${isInputFocused ? theme.accent : theme.border}`
+          }}>
+            <FaSearch style={{ 
+              marginLeft: '16px', 
+              color: isInputFocused ? theme.accent : theme.text,
+              opacity: 0.7,
+              transition: 'color 0.3s ease',
+              fontSize: window.innerWidth <= 480 ? '0.9rem' : '1rem'
+            }} />
+            <input
+              type="text"
+              value={searchTerm}
+              onChange={handleSearchChange}
+              onFocus={() => setIsInputFocused(true)}
+              onBlur={() => setIsInputFocused(false)}
+              placeholder="Search for movies..."
+              style={{
+                flex: 1,
+                padding: window.innerWidth <= 480 ? '12px 16px' : '16px',
+                fontSize: window.innerWidth <= 480 ? '0.9rem' : '1rem',
+                border: 'none',
+                outline: 'none',
+                backgroundColor: 'transparent',
+                color: theme.text,
+                width: '100%',
+                borderRadius: '24px'
+              }}
+            />
+          </div>
+        </motion.div>
+      </div>
 
-      {/* Results */}
+      {/* Results Section */}
       <div className="container" style={{ padding: '2rem 1rem' }}>
         {status === 'loading' && (
           <div style={{ display: 'flex', justifyContent: 'center', padding: '3rem 0' }}>
