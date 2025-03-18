@@ -469,139 +469,116 @@ function Home() {
   };
 
   return (
-    <div className="home-container" style={{ 
-      width: '100%',
-      minHeight: '100vh',
+    <div style={{
       backgroundColor: isDarkMode ? '#0f172a' : theme.background,
-      position: 'relative',
-      overflow: 'hidden'
+      color: theme.text,
+      minHeight: '100vh',
     }}>
-      {/* Hero Section with Lamp */}
-      <div className="hero-section" style={{ 
-        position: 'relative',
+      {/* Navigation Bar */}
+      {/* <Navbar /> */}
+
+      {/* Hero Section */}
+      <div style={{
         width: '100%',
-        height: '70vh',
-        minHeight: '500px',
-        overflow: 'hidden',
+        position: 'relative',
+        minHeight: '75vh',
         display: 'flex',
         flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        backgroundColor: isDarkMode ? 'transparent' : theme.background,
-        marginBottom: '-4rem'
+        justifyContent: 'flex-start'
       }}>
-        {/* Single Lamp Container */}
-        <div style={{ 
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          width: '100%',
-          height: '100%',
-          zIndex: 0
-        }}>
-          <LampContainer>
-            {/* Empty - just for background effect */}
-          </LampContainer>
-        </div>
-        
-        {/* Content Container */}
-        <div style={{
-          position: 'relative',
-          zIndex: 10,
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          textAlign: 'center',
-          maxWidth: '800px',
-          padding: '0 20px'
-        }}>
-          <motion.h1
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            style={{
-              fontSize: 'clamp(2.5rem, 5vw, 4rem)',
-              fontWeight: 'bold',
-              marginBottom: '1rem',
-              background: 'linear-gradient(to right, #f59e0b, #ef4444)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              textAlign: 'center'
-            }}
-          >
-            MovieBuzz
-          </motion.h1>
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.1 }}
-            style={{
-              fontSize: 'clamp(1rem, 2vw, 1.2rem)',
-              marginBottom: '2rem',
-              color: theme.text,
-              maxWidth: '600px',
-              margin: '0 auto 2rem'
-            }}
-          >
-            Discover and explore your favorite movies with our simple and elegant movie search app.
-          </motion.p>
-          
-          {/* Search Input */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            style={{
-              width: '100%',
-              maxWidth: '500px',
-              position: 'relative',
-              margin: '0 auto'
-            }}
-          >
-            <div style={{
-              position: 'relative',
-              display: 'flex',
-              alignItems: 'center',
-              width: '100%',
-              backgroundColor: isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.05)',
-              borderRadius: '9999px',
-              padding: '0.75rem 1.5rem',
-              boxShadow: isDarkMode ? '0 4px 6px rgba(0, 0, 0, 0.1)' : '0 4px 6px rgba(0, 0, 0, 0.05)',
-              border: isInputFocused ? '2px solid #f59e0b' : '2px solid transparent',
-              transition: 'all 0.3s ease'
-            }}>
-              <FaSearch style={{ 
-                color: isDarkMode ? '#e2e8f0' : theme.text, 
-                marginRight: '0.75rem',
-                fontSize: '1.25rem'
-              }} />
-              <input
-                type="text"
-                value={searchTerm}
-                onChange={handleSearchChange}
-                onFocus={() => setIsInputFocused(true)}
-                onBlur={() => setIsInputFocused(false)}
-                placeholder="Search for movies..."
-                style={{
-                  flex: 1,
-                  backgroundColor: 'transparent',
-                  border: 'none',
-                  outline: 'none',
-                  color: theme.text,
-                  fontSize: '1.125rem'
-                }}
-              />
-            </div>
-          </motion.div>
-        </div>
+        {/* Use LampContainer as intended with content as children */}
+        <LampContainer>
+          {/* Content inside the LampContainer */}
+          <div style={{ marginTop: '12rem' }}>
+            <motion.h1
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+              style={{
+                fontSize: 'clamp(2.5rem, 5vw, 4rem)',
+                fontWeight: 'bold',
+                marginBottom: '1rem',
+                background: 'linear-gradient(to right, #f59e0b, #ef4444)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                textAlign: 'center'
+              }}
+            >
+              MovieBuzz
+            </motion.h1>
+            
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.1 }}
+              style={{
+                fontSize: 'clamp(1rem, 2vw, 1.2rem)',
+                marginBottom: '2rem',
+                color: theme.text,
+                maxWidth: '600px',
+                margin: '0 auto 2rem',
+                textAlign: 'center'
+              }}
+            >
+              Discover and explore your favorite movies with our simple and elegant movie search app.
+            </motion.p>
+            
+            {/* Search Input */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+              style={{
+                width: '100%',
+                maxWidth: '500px',
+                position: 'relative',
+                margin: '0 auto'
+              }}
+            >
+              <div style={{
+                position: 'relative',
+                display: 'flex',
+                alignItems: 'center',
+                width: '100%',
+                backgroundColor: isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.05)',
+                borderRadius: '9999px',
+                padding: '0.75rem 1.5rem',
+                boxShadow: isDarkMode ? '0 4px 6px rgba(0, 0, 0, 0.1)' : '0 4px 6px rgba(0, 0, 0, 0.05)',
+                border: isInputFocused ? '2px solid #f59e0b' : '2px solid transparent',
+                transition: 'all 0.3s ease'
+              }}>
+                <FaSearch style={{ 
+                  color: isDarkMode ? '#e2e8f0' : theme.text, 
+                  marginRight: '0.75rem',
+                  fontSize: '1.25rem'
+                }} />
+                <input
+                  type="text"
+                  value={searchTerm}
+                  onChange={handleSearchChange}
+                  onFocus={() => setIsInputFocused(true)}
+                  onBlur={() => setIsInputFocused(false)}
+                  placeholder="Search for movies..."
+                  style={{
+                    flex: 1,
+                    backgroundColor: 'transparent',
+                    border: 'none',
+                    outline: 'none',
+                    color: theme.text,
+                    fontSize: '1.125rem'
+                  }}
+                />
+              </div>
+            </motion.div>
+          </div>
+        </LampContainer>
       </div>
 
       {/* Movie Results Section */}
       <div className="movie-results-container" style={{ 
-        padding: '1rem 1rem', 
+        padding: '2rem 1rem',
         maxWidth: '1280px',
-        margin: '-4rem auto 0',
+        margin: '0 auto',
         position: 'relative',
         zIndex: 5,
         backgroundColor: isDarkMode ? '#0f172a' : theme.background
