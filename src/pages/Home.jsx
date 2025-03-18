@@ -89,15 +89,15 @@ function Home() {
   // Handle page change
   const handlePageChange = (newPage) => {
     if (newPage >= 1 && newPage <= totalPages) {
+      // Only update the page and fetch new results
       dispatch(setCurrentPage(newPage));
       dispatch(searchMovies({ query: searchTerm, page: newPage }));
       
-      // Force scroll to top - use setTimeout to ensure it happens after state updates
-      setTimeout(() => {
-        window.scrollTo(0, 0);
-        document.documentElement.scrollTop = 0; // Alternative method for better browser support
-        document.body.scrollTop = 0; // For Safari
-      }, 100);
+      // Smooth scroll just the results container into view
+      const resultsContainer = document.querySelector('.movie-results-container');
+      if (resultsContainer) {
+        resultsContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
     }
   };
 
@@ -374,6 +374,7 @@ function Home() {
           </motion.div>
 
           <motion.div
+            key={`search-results-page-${currentPage}`}
             variants={containerVariants}
             initial="hidden"
             animate="visible"
