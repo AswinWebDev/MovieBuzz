@@ -482,7 +482,8 @@ function Home() {
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
-        backgroundColor: isDarkMode ? 'transparent' : theme.background
+        backgroundColor: isDarkMode ? 'transparent' : theme.background,
+        marginBottom: '-4rem'
       }}>
         {/* Single Lamp Container */}
         <div style={{ 
@@ -593,9 +594,9 @@ function Home() {
 
       {/* Movie Results Section */}
       <div className="movie-results-container" style={{ 
-        padding: '2rem 1rem', 
+        padding: '1rem 1rem', 
         maxWidth: '1280px',
-        margin: '0 auto',
+        margin: '-4rem auto 0',
         position: 'relative',
         zIndex: 5,
         backgroundColor: isDarkMode ? '#0f172a' : theme.background

@@ -458,13 +458,15 @@ function Navbar() {
 
 // NavLink component for desktop navigation
 function NavLink({ to, active, theme, text, icon }) {
+  const isDarkMode = useSelector((state) => state.theme.isDarkMode);
+  
   return (
     <Link
       to={to}
       style={{
         position: 'relative',
         fontWeight: active ? '600' : '500',
-        color: active ? theme.accent : theme.text,
+        color: active ? '#f59e0b' : theme.text,
         textDecoration: 'none',
         padding: '0.5rem 0.75rem',
         display: 'flex',
@@ -481,11 +483,11 @@ function NavLink({ to, active, theme, text, icon }) {
           layoutId="activeNavIndicator"
           style={{
             position: 'absolute',
-            bottom: '-2px',
-            left: '0',
-            right: '0',
-            height: '2px',
-            backgroundColor: theme.accent,
+            bottom: '-4px',
+            left: '20%',
+            right: '20%',
+            height: '3px',
+            background: 'linear-gradient(to right, #f59e0b, #ef4444)',
             borderRadius: '4px'
           }}
           transition={{ duration: 0.3 }}
