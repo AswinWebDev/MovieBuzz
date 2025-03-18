@@ -90,8 +90,13 @@ function Home() {
     if (newPage >= 1 && newPage <= totalPages) {
       dispatch(setCurrentPage(newPage));
       dispatch(searchMovies({ query: searchTerm, page: newPage }));
-      // Scroll to top of results
-      window.scrollTo({ top: document.querySelector('.movie-results-container')?.offsetTop - 20 || 0, behavior: 'smooth' });
+      
+      // Force scroll to top - use setTimeout to ensure it happens after state updates
+      setTimeout(() => {
+        window.scrollTo(0, 0);
+        document.documentElement.scrollTop = 0; // Alternative method for better browser support
+        document.body.scrollTop = 0; // For Safari
+      }, 100);
     }
   };
 
@@ -443,10 +448,10 @@ function Home() {
                       <span style={{ 
                         display: 'flex', 
                         alignItems: 'center',
-                        color: '#f1c40f'
+                        textTransform: 'capitalize',
+                        color: movie.Type === 'movie' ? '#4ade80' : '#8b5cf6'
                       }}>
-                        <FaStar size={12} style={{ marginRight: '4px' }} />
-                        {movie.imdbRating || 'N/A'}
+                        {movie.Type || 'N/A'}
                       </span>
                     </div>
                   </div>
