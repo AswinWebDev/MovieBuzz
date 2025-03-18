@@ -7,6 +7,7 @@ import debounce from 'lodash.debounce';
 import { addToFavorites, removeFromFavorites } from '../store/favoritesSlice';
 import { searchMovies, clearSearchResults, setCurrentPage } from '../store/movieSlice';
 import { colors, fonts, shadows, transitions } from '../styles/theme';
+import Navbar from '../components/Navbar';
 
 // Import lamp component
 import { LampContainer } from '../components/ui/lamp';
@@ -474,22 +475,23 @@ function Home() {
       color: theme.text,
       minHeight: '100vh',
     }}>
-      {/* Navigation Bar */}
+      {/* Navigation Bar (already present in App.jsx) */}
       {/* <Navbar /> */}
-
-      {/* Hero Section */}
-      <div style={{
-        width: '100%',
+      
+      <div className="hero-container" style={{
         position: 'relative',
+        width: '100%',
         minHeight: '75vh',
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'flex-start'
       }}>
-        {/* Use LampContainer as intended with content as children */}
+        {/* Properly using LampContainer with content as children */}
         <LampContainer>
-          {/* Content inside the LampContainer */}
-          <div style={{ marginTop: '12rem' }}>
+          <div style={{
+            position: 'relative',
+            zIndex: 2,
+            width: '100%',
+            textAlign: 'center',
+            marginTop: '6rem' // Add some top margin to position content below the lamp's beam
+          }}>
             <motion.h1
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
