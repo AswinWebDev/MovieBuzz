@@ -114,19 +114,8 @@ export const LampContainer = ({
           opacity: 0.1,
           backdropFilter: 'blur(1rem)'
         }}></div>
-        <div style={{
-          position: 'absolute',
-          inset: 'auto',
-          zIndex: 50,
-          height: '9rem',
-          width: '28rem',
-          transform: 'translateY(-50%)',
-          borderRadius: '9999px',
-          backgroundColor: '#06b6d4',
-          opacity: 0.5,
-          filter: 'blur(1.5rem)'
-        }}></div>
-        <motion.div
+      
+        {/* <motion.div
           initial={{ width: "8rem" }}
           whileInView={{ width: "16rem" }}
           transition={{
@@ -145,7 +134,7 @@ export const LampContainer = ({
             backgroundColor: '#22d3ee',
             filter: 'blur(1rem)'
           }}
-        ></motion.div>
+        ></motion.div> */}
         <motion.div
           initial={{ width: "15rem" }}
           whileInView={{ width: "30rem" }}
