@@ -155,10 +155,13 @@ function Favorites() {
             }}
           >
             <div style={{ 
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center', 
               fontSize: '4rem', 
-              marginBottom: '1.5rem',
+              marginBottom: '2rem',
               color: theme.accent,
-              opacity: 0.5
+              opacity: 0.5,
             }}>
               <FaHeart />
             </div>
