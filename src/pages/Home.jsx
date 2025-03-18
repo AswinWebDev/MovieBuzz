@@ -154,7 +154,8 @@ function Home() {
         <div style={{ 
           display: 'flex', 
           alignItems: 'center',
-          fontSize: '0.9rem' 
+          fontSize: '0.9rem',
+          color: theme.text
         }}>
           Page <span style={{ 
             margin: '0 8px', 
@@ -198,7 +199,7 @@ function Home() {
       return (
         <div style={{ display: 'flex', justifyContent: 'center', padding: '3rem 0' }}>
           <div className="loader" style={{
-            border: '4px solid rgba(0, 0, 0, 0.1)',
+            border: `4px solid ${isDarkMode ? 'rgba(0, 0, 0, 0.1)' : 'rgba(0, 0, 0, 0.1)'}`,
             borderLeft: '4px solid #f59e0b',
             borderRadius: '50%',
             width: '40px',
@@ -221,8 +222,8 @@ function Home() {
             marginTop: '2rem',
             textAlign: 'center',
             color: '#e74c3c',
-            boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
-            border: '1px solid rgba(0, 0, 0, 0.1)'
+            boxShadow: isDarkMode ? '0 4px 6px rgba(0, 0, 0, 0.1)' : '0 4px 6px rgba(0, 0, 0, 0.08)',
+            border: `1px solid ${theme.border}`
           }}
         >
           <p style={{ 
@@ -246,12 +247,12 @@ function Home() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
           style={{
-            backgroundColor: 'rgba(255, 255, 255, 0.1)',
+            backgroundColor: isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.05)',
             padding: '3rem',
             borderRadius: '16px',
             textAlign: 'center',
-            boxShadow: '0 4px 15px rgba(0, 0, 0, 0.1)',
-            border: '1px solid rgba(255, 255, 255, 0.1)',
+            boxShadow: isDarkMode ? '0 4px 15px rgba(0, 0, 0, 0.1)' : '0 4px 15px rgba(0, 0, 0, 0.05)',
+            border: isDarkMode ? '1px solid rgba(255, 255, 255, 0.1)' : `1px solid ${theme.border}`,
             marginTop: '2rem'
           }}
         >
@@ -263,7 +264,7 @@ function Home() {
             🎬
           </div>
           <h2 style={{ 
-            color: '#e2e8f0', 
+            color: theme.text, 
             fontSize: '1.8rem', 
             marginBottom: '1rem',
             fontWeight: 'bold'
@@ -275,7 +276,7 @@ function Home() {
             marginBottom: '1rem', 
             opacity: 0.8,
             padding: '0 0.5rem',
-            color: '#e2e8f0'
+            color: theme.text
           }}>
             We couldn't find any movies matching "{searchTerm}".
           </p>
@@ -283,7 +284,7 @@ function Home() {
             fontSize: '1rem', 
             opacity: 0.7,
             padding: '0 0.5rem',
-            color: '#e2e8f0'
+            color: theme.text
           }}>
             Try adjusting your search term or search for a different movie.
           </p>
@@ -311,7 +312,7 @@ function Home() {
                 fontWeight: '600',
                 marginBottom: '1.5rem',
                 marginTop: '1rem',
-                color: '#e2e8f0'
+                color: theme.text
               }}
             >
               Search Results {totalResults > 0 && <span style={{ fontSize: '1rem', opacity: 0.7 }}>({totalResults} movies found)</span>}
@@ -334,11 +335,11 @@ function Home() {
                 key={movie.imdbID}
                 variants={itemVariants}
                 style={{
-                  backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                  backgroundColor: isDarkMode ? 'rgba(255, 255, 255, 0.1)' : theme.card,
                   borderRadius: '12px',
                   overflow: 'hidden',
-                  boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
-                  border: '1px solid rgba(255, 255, 255, 0.1)',
+                  boxShadow: isDarkMode ? '0 4px 6px rgba(0, 0, 0, 0.1)' : shadows.light.md,
+                  border: isDarkMode ? '1px solid rgba(255, 255, 255, 0.1)' : `1px solid ${theme.border}`,
                   transition: 'all 0.3s ease',
                   height: '100%',
                   display: 'flex',
@@ -346,7 +347,7 @@ function Home() {
                 }}
                 whileHover={{
                   y: -5,
-                  boxShadow: '0 10px 25px rgba(0, 0, 0, 0.2)',
+                  boxShadow: isDarkMode ? '0 10px 25px rgba(0, 0, 0, 0.2)' : '0 10px 25px rgba(0, 0, 0, 0.1)',
                   borderColor: '#f59e0b'
                 }}
               >
@@ -380,8 +381,8 @@ function Home() {
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        backgroundColor: 'rgba(15, 23, 42, 0.5)',
-                        color: '#e2e8f0',
+                        backgroundColor: isDarkMode ? 'rgba(15, 23, 42, 0.5)' : 'rgba(45, 50, 80, 0.1)',
+                        color: theme.text,
                         fontSize: '3rem',
                         opacity: 0.5
                       }}>
@@ -421,7 +422,7 @@ function Home() {
                       fontSize: '1rem', 
                       fontWeight: 600, 
                       marginBottom: '0.5rem',
-                      color: '#e2e8f0',
+                      color: theme.text,
                       lineHeight: 1.3
                     }}>
                       {movie.Title}
@@ -430,7 +431,7 @@ function Home() {
                       display: 'flex', 
                       alignItems: 'center', 
                       marginTop: 'auto',
-                      color: '#94a3b8',
+                      color: isDarkMode ? '#94a3b8' : theme.secondary,
                       fontSize: '0.875rem'
                     }}>
                       <span>{movie.Year}</span>
@@ -462,7 +463,7 @@ function Home() {
     <div className="home-container" style={{ 
       width: '100%',
       minHeight: '100vh',
-      backgroundColor: '#0f172a',
+      backgroundColor: isDarkMode ? '#0f172a' : theme.background,
       position: 'relative',
       overflow: 'hidden'
     }}>
@@ -476,7 +477,8 @@ function Home() {
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
+        backgroundColor: isDarkMode ? 'transparent' : theme.background
       }}>
         {/* Single Lamp Container */}
         <div style={{ 
@@ -527,7 +529,7 @@ function Home() {
             style={{
               fontSize: 'clamp(1rem, 2vw, 1.2rem)',
               marginBottom: '2rem',
-              color: '#e2e8f0',
+              color: theme.text,
               maxWidth: '600px',
               margin: '0 auto 2rem'
             }}
@@ -552,15 +554,15 @@ function Home() {
               display: 'flex',
               alignItems: 'center',
               width: '100%',
-              backgroundColor: 'rgba(255, 255, 255, 0.1)',
+              backgroundColor: isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.05)',
               borderRadius: '9999px',
               padding: '0.75rem 1.5rem',
-              boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+              boxShadow: isDarkMode ? '0 4px 6px rgba(0, 0, 0, 0.1)' : '0 4px 6px rgba(0, 0, 0, 0.05)',
               border: isInputFocused ? '2px solid #f59e0b' : '2px solid transparent',
               transition: 'all 0.3s ease'
             }}>
               <FaSearch style={{ 
-                color: '#e2e8f0', 
+                color: isDarkMode ? '#e2e8f0' : theme.text, 
                 marginRight: '0.75rem',
                 fontSize: '1.25rem'
               }} />
@@ -576,7 +578,7 @@ function Home() {
                   backgroundColor: 'transparent',
                   border: 'none',
                   outline: 'none',
-                  color: '#e2e8f0',
+                  color: theme.text,
                   fontSize: '1.125rem'
                 }}
               />
@@ -592,7 +594,7 @@ function Home() {
         margin: '0 auto',
         position: 'relative',
         zIndex: 5,
-        backgroundColor: '#0f172a'
+        backgroundColor: isDarkMode ? '#0f172a' : theme.background
       }}>
         {renderMovieResults()}
       </div>

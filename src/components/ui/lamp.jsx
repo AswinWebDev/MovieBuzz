@@ -1,6 +1,8 @@
 "use client";
 import React from "react";
 import { motion } from "framer-motion";
+import { useSelector } from 'react-redux';
+import { colors } from '../../styles/theme';
 
 // Simple utility function to combine class names
 const cn = (...inputs) => inputs.filter(Boolean).join(' ');
@@ -9,13 +11,17 @@ export const LampContainer = ({
   children,
   className,
 }) => {
+  const isDarkMode = useSelector((state) => state.theme.isDarkMode);
+  const theme = isDarkMode ? colors.dark : colors.light;
+  const bgColor = isDarkMode ? '#0f172a' : theme.background;
+  
   return (
     <div
       className={cn(
         "relative flex min-h-screen flex-col items-center justify-center overflow-hidden w-full rounded-md z-0",
         className
       )}
-      style={{ backgroundColor: '#0f172a' }} // Slate-950 equivalent
+      style={{ backgroundColor: bgColor }}
     >
       <div className="relative flex w-full flex-1 scale-y-125 items-center justify-center isolate z-0 ">
         <motion.div
@@ -40,7 +46,7 @@ export const LampContainer = ({
             position: 'absolute',
             width: '100%',
             left: 0,
-            backgroundColor: '#0f172a',
+            backgroundColor: bgColor,
             height: '10rem',
             bottom: 0,
             zIndex: 20,
@@ -51,7 +57,7 @@ export const LampContainer = ({
             width: '10rem',
             height: '100%',
             left: 0,
-            backgroundColor: '#0f172a',
+            backgroundColor: bgColor,
             bottom: 0,
             zIndex: 20,
             maskImage: 'linear-gradient(to right, white, transparent)'
@@ -79,7 +85,7 @@ export const LampContainer = ({
             width: '10rem',
             height: '100%',
             right: 0,
-            backgroundColor: '#0f172a',
+            backgroundColor: bgColor,
             bottom: 0,
             zIndex: 20,
             maskImage: 'linear-gradient(to left, white, transparent)'
@@ -88,7 +94,7 @@ export const LampContainer = ({
             position: 'absolute',
             width: '100%',
             right: 0,
-            backgroundColor: '#0f172a',
+            backgroundColor: bgColor,
             height: '10rem',
             bottom: 0,
             zIndex: 20,
@@ -101,7 +107,7 @@ export const LampContainer = ({
           height: '12rem',
           width: '100%',
           transform: 'translateY(3rem) scaleX(1.5)',
-          backgroundColor: '#0f172a',
+          backgroundColor: bgColor,
           filter: 'blur(1rem)'
         }}></div>
         <div style={{
@@ -161,7 +167,7 @@ export const LampContainer = ({
           height: '11rem',
           width: '100%',
           transform: 'translateY(-12.5rem)',
-          backgroundColor: '#0f172a'
+          backgroundColor: bgColor
         }}></div>
       </div>
 
@@ -199,12 +205,12 @@ export function LampDemo() {
           WebkitTextFillColor: 'transparent',
           textAlign: 'center',
           fontSize: '2.25rem',
-          fontWeight: 500,
-          letterSpacing: '-0.025em',
-          lineHeight: 1.25
+          lineHeight: 1.2,
+          fontWeight: 'bold',
+          maxWidth: '47rem'
         }}
       >
-        Build lamps <br /> the right way
+        Spotlight effect for your brand
       </motion.h1>
     </LampContainer>
   );
