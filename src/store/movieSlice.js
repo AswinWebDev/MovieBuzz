@@ -6,12 +6,16 @@ const API_KEY = '4abf06c1';
 // Async thunk for searching movies
 export const searchMovies = createAsyncThunk(
   'movies/searchMovies',
-  async (query, { rejectWithValue }) => {
+  async ({ query, page = 1 }, { rejectWithValue }) => {
     try {
-      if (!query) return [];
-      const response = await axios.get(`https://www.omdbapi.com/?apikey=${API_KEY}&s=${query}`);
+      if (!query) return { Search: [], totalResults: 0 };
+      const response = await axios.get(`https://www.omdbapi.com/?apikey=${API_KEY}&s=${query}&page=${page}`);
       if (response.data.Response === 'True') {
-        return response.data.Search;
+        return {
+          Search: response.data.Search,
+          totalResults: parseInt(response.data.totalResults) || 0,
+          query
+        };
       } else {
         return rejectWithValue(response.data.Error || 'No results found');
       }
@@ -42,7 +46,10 @@ const initialState = {
   searchResults: [],
   currentMovie: null,
   status: 'idle', // 'idle' | 'loading' | 'succeeded' | 'failed'
-  error: null
+  error: null,
+  totalResults: 0,
+  currentPage: 1,
+  searchQuery: ''
 };
 
 const movieSlice = createSlice({
@@ -53,9 +60,15 @@ const movieSlice = createSlice({
       state.searchResults = [];
       state.status = 'idle';
       state.error = null;
+      state.totalResults = 0;
+      state.currentPage = 1;
+      state.searchQuery = '';
     },
     clearCurrentMovie: (state) => {
       state.currentMovie = null;
+    },
+    setCurrentPage: (state, action) => {
+      state.currentPage = action.payload;
     }
   },
   extraReducers: (builder) => {
@@ -67,12 +80,15 @@ const movieSlice = createSlice({
       })
       .addCase(searchMovies.fulfilled, (state, action) => {
         state.status = 'succeeded';
-        state.searchResults = action.payload;
+        state.searchResults = action.payload.Search;
+        state.totalResults = action.payload.totalResults;
+        state.searchQuery = action.payload.query;
       })
       .addCase(searchMovies.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.payload;
         state.searchResults = [];
+        state.totalResults = 0;
       })
       // Fetch Movie Details
       .addCase(fetchMovieDetails.pending, (state) => {
@@ -91,5 +107,5 @@ const movieSlice = createSlice({
   }
 });
 
-export const { clearSearchResults, clearCurrentMovie } = movieSlice.actions;
+export const { clearSearchResults, clearCurrentMovie, setCurrentPage } = movieSlice.actions;
 export default movieSlice.reducer;

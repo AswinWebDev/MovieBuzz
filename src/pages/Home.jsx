@@ -2,21 +2,25 @@ import { useState, useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FaHeart, FaStar, FaSearch } from 'react-icons/fa';
+import { FaHeart, FaStar, FaSearch, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import debounce from 'lodash.debounce';
 import { addToFavorites, removeFromFavorites } from '../store/favoritesSlice';
-import { searchMovies, clearSearchResults } from '../store/movieSlice';
+import { searchMovies, clearSearchResults, setCurrentPage } from '../store/movieSlice';
 import { colors, fonts, shadows, transitions } from '../styles/theme';
 
 function Home() {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [isInputFocused, setIsInputFocused] = useState(false);
   const dispatch = useDispatch();
   
-  const { searchResults, status, error } = useSelector((state) => state.movies);
+  const { searchResults, status, error, totalResults, currentPage, searchQuery } = useSelector((state) => state.movies);
+  const [searchTerm, setSearchTerm] = useState(searchQuery || '');
+  const [isInputFocused, setIsInputFocused] = useState(false);
   const favorites = useSelector((state) => state.favorites.favorites);
   const isDarkMode = useSelector((state) => state.theme.isDarkMode);
   const theme = isDarkMode ? colors.dark : colors.light;
+
+  // Calculate pagination info
+  const resultsPerPage = 10; // OMDb API returns 10 results per page
+  const totalPages = Math.ceil(totalResults / resultsPerPage);
 
   // Animation variants
   const containerVariants = {
@@ -41,12 +45,29 @@ function Home() {
       }
     }
   };
+  
+  // When searchQuery updates from redux, update local searchTerm
+  useEffect(() => {
+    if (searchQuery) {
+      setSearchTerm(searchQuery);
+    }
+  }, [searchQuery]);
+
+  // Load search results if we have a query but no results yet
+  useEffect(() => {
+    // If we have a search query in redux but no results, fetch the results
+    if (searchQuery && !searchResults.length && status !== 'loading') {
+      dispatch(searchMovies({ query: searchQuery, page: currentPage }));
+    }
+  }, [searchQuery, searchResults.length, currentPage, dispatch, status]);
 
   // Debounce search input
   const debouncedSearch = useMemo(
     () => debounce((query) => {
       if (query.trim()) {
-        dispatch(searchMovies(query));
+        // Reset to page 1 when search term changes
+        dispatch(setCurrentPage(1));
+        dispatch(searchMovies({ query, page: 1 }));
       } else {
         dispatch(clearSearchResults());
       }
@@ -59,6 +80,16 @@ function Home() {
     const value = e.target.value;
     setSearchTerm(value);
     debouncedSearch(value);
+  };
+
+  // Handle page change
+  const handlePageChange = (newPage) => {
+    if (newPage >= 1 && newPage <= totalPages) {
+      dispatch(setCurrentPage(newPage));
+      dispatch(searchMovies({ query: searchTerm, page: newPage }));
+      // Scroll to top of results
+      window.scrollTo({ top: document.querySelector('.container').offsetTop - 20, behavior: 'smooth' });
+    }
   };
 
   // Check if movie is in favorites
@@ -81,6 +112,82 @@ function Home() {
       debouncedSearch.cancel();
     };
   }, [debouncedSearch]);
+
+  // Render pagination controls
+  const renderPagination = () => {
+    if (totalPages <= 1) return null;
+    
+    return (
+      <div style={{ 
+        display: 'flex', 
+        justifyContent: 'center', 
+        alignItems: 'center',
+        marginTop: '2rem',
+        gap: '1rem'
+      }}>
+        <motion.button
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          onClick={() => handlePageChange(currentPage - 1)}
+          disabled={currentPage === 1}
+          style={{
+            backgroundColor: theme.card,
+            color: currentPage === 1 ? theme.border : theme.text,
+            border: `1px solid ${theme.border}`,
+            borderRadius: '8px',
+            padding: '8px 16px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            cursor: currentPage === 1 ? 'not-allowed' : 'pointer',
+            opacity: currentPage === 1 ? 0.5 : 1,
+            boxShadow: isDarkMode ? shadows.dark.sm : shadows.light.sm,
+            transition: transitions.default
+          }}
+        >
+          <FaChevronLeft style={{ marginRight: '4px' }} /> Prev
+        </motion.button>
+        
+        <div style={{ 
+          display: 'flex', 
+          alignItems: 'center',
+          fontSize: '0.9rem' 
+        }}>
+          Page <span style={{ 
+            margin: '0 8px', 
+            fontWeight: 'bold', 
+            color: theme.primary 
+          }}>{currentPage}</span> of <span style={{ 
+            margin: '0 8px', 
+            fontWeight: 'bold' 
+          }}>{totalPages}</span>
+        </div>
+        
+        <motion.button
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          onClick={() => handlePageChange(currentPage + 1)}
+          disabled={currentPage === totalPages}
+          style={{
+            backgroundColor: theme.card,
+            color: currentPage === totalPages ? theme.border : theme.text,
+            border: `1px solid ${theme.border}`,
+            borderRadius: '8px',
+            padding: '8px 16px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            cursor: currentPage === totalPages ? 'not-allowed' : 'pointer',
+            opacity: currentPage === totalPages ? 0.5 : 1,
+            boxShadow: isDarkMode ? shadows.dark.sm : shadows.light.sm,
+            transition: transitions.default
+          }}
+        >
+          Next <FaChevronRight style={{ marginLeft: '4px' }} />
+        </motion.button>
+      </div>
+    );
+  };
 
   return (
     <div style={{ 
@@ -241,7 +348,7 @@ function Home() {
               marginBottom: window.innerWidth <= 480 ? '1rem' : '1.5rem', 
               opacity: 0.5 
             }}>
-              🔍
+              🎬
             </div>
             <h2 style={{ 
               color: theme.text, 
@@ -271,20 +378,40 @@ function Home() {
 
         {status === 'succeeded' && searchResults.length > 0 && (
           <div>
-            <motion.h2
+            <motion.div 
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               style={{
-                fontSize: '1.5rem',
-                fontWeight: '600',
-                marginBottom: '1.5rem',
-                marginTop: '1rem',
-                fontFamily: fonts.heading,
-                color: theme.text
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                flexWrap: 'wrap',
+                gap: '1rem'
               }}
             >
-              Search Results
-            </motion.h2>
+              <motion.h2
+                style={{
+                  fontSize: '1.5rem',
+                  fontWeight: '600',
+                  marginBottom: '1.5rem',
+                  marginTop: '1rem',
+                  fontFamily: fonts.heading,
+                  color: theme.text
+                }}
+              >
+                Search Results
+              </motion.h2>
+              
+              {totalResults > 0 && (
+                <motion.p
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 0.8 }}
+                  style={{ fontSize: '0.9rem', marginBottom: '1.5rem' }}
+                >
+                  Found {totalResults} result{totalResults !== 1 ? 's' : ''}
+                </motion.p>
+              )}
+            </motion.div>
             
             <AnimatePresence>
               <motion.div
@@ -440,6 +567,9 @@ function Home() {
                 ))}
               </motion.div>
             </AnimatePresence>
+            
+            {/* Pagination */}
+            {renderPagination()}
           </div>
         )}
 
