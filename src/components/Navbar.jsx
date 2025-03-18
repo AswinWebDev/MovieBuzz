@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FaSun, FaMoon, FaHeart, FaFilm, FaBars, FaTimes } from 'react-icons/fa';
+import { FaSun, FaMoon, FaHeart, FaFilm, FaBars, FaTimes, FaChevronRight, FaArrowRight } from 'react-icons/fa';
 import { toggleTheme } from '../store/themeSlice';
 import { colors, fonts, shadows, transitions } from '../styles/theme';
 
@@ -299,7 +299,37 @@ function Navbar() {
             }}
             className="mobile-menu"
           >
-            <motion.div variants={mobileItemVariants}>
+            {/* Close button inside sidebar */}
+            <motion.button
+              variants={mobileItemVariants}
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
+              onClick={() => setMenuOpen(false)}
+              style={{
+                position: 'absolute',
+                top: '1rem',
+                right: '1rem',
+                backgroundColor: isDarkMode ? 'rgba(255, 255, 255, 0.15)' : 'rgba(0, 0, 0, 0.1)',
+                color: theme.teal,
+                border: 'none',
+                borderRadius: '8px',
+                width: '36px',
+                height: '36px',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                cursor: 'pointer',
+                transition: transitions.default,
+                zIndex: 1200
+              }}
+              aria-label="Close menu"
+            >
+              <FaArrowRight size={16} />
+            </motion.button>
+            <motion.div 
+              variants={mobileItemVariants}
+              style={{ marginTop: '1.5rem' }}
+            >
               <Link 
                 to="/" 
                 style={{
@@ -498,7 +528,7 @@ function Navbar() {
         }
         
         @media (max-width: 360px) {
-          .brand-name span {
+          .brand-name {
             font-size: 0.85rem;
           }
           
@@ -508,7 +538,7 @@ function Navbar() {
         }
         
         @media (max-width: 320px) {
-          .brand-name span {
+          .brand-name {
             font-size: 0.8rem;
           }
           
