@@ -579,45 +579,6 @@ function Home() {
                         </motion.div>
                       </motion.div>
 
-                      {/* Play Button Overlay */}
-                      <motion.div
-                        style={{
-                          position: 'absolute',
-                          top: '50%',
-                          left: '50%',
-                          transform: 'translate(-50%, -50%)',
-                          zIndex: 20,
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center'
-                        }}
-                        variants={{
-                          initial: { opacity: 0, scale: 0.5 },
-                          hover: { 
-                            opacity: 1, 
-                            scale: 1,
-                            transition: { 
-                              duration: 0.3, 
-                              delay: 0.1 
-                            } 
-                          }
-                        }}
-                      >
-                        <div style={{
-                          width: '50px',
-                          height: '50px',
-                          borderRadius: '50%',
-                          backgroundColor: 'rgba(255, 158, 11, 0.9)',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3)',
-                          backdropFilter: 'blur(4px)'
-                        }}>
-                          <FaPlay size={15} color="#fff" style={{ marginLeft: '2px' }} />
-                        </div>
-                      </motion.div>
-                        
                       {/* Movie Info Badge */}
                       <motion.div
                         style={{
