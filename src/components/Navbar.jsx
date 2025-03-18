@@ -16,6 +16,24 @@ function Navbar() {
   const isDarkMode = useSelector((state) => state.theme.isDarkMode);
   const theme = isDarkMode ? colors.dark : colors.light;
   
+  // Responsive media queries using JS
+  const checkMobile = () => {
+    return window.innerWidth <= 800;
+  };
+  
+  // Initial mobile state
+  const [isMobile, setIsMobile] = useState(checkMobile());
+  
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(checkMobile());
+      setMenuOpen(false);
+    };
+    
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+  
   // Handle scroll effect
   useEffect(() => {
     const handleScroll = () => {
@@ -126,6 +144,8 @@ function Navbar() {
     }
   };
   
+  const mediaQuery = window.matchMedia('(max-width: 768px)').matches;
+  
   return (
     <>
       <motion.nav
@@ -143,7 +163,8 @@ function Navbar() {
           boxShadow: scrolled ? (isDarkMode ? shadows.dark.sm : shadows.light.sm) : 'none',
           transition: 'all 0.3s ease',
           padding: scrolled ? '0.75rem 0' : '1rem 0',
-          borderBottom: scrolled ? `1px solid ${theme.border}` : 'none'
+          borderBottom: scrolled ? `1px solid ${theme.border}` : 'none',
+          width: '100%'
         }}
         className="navbar"
       >
@@ -183,7 +204,7 @@ function Navbar() {
           </Link>
           
           {/* Desktop Navigation Links */}
-          <div className="desktop-nav" style={styles.desktopNav}>
+          <div className="desktop-nav">
             <div style={{ display: 'flex', gap: '1.5rem' }}>
               <NavLink to="/" active={isActive('/')} theme={theme} text="Home" />
               <NavLink to="/favorites" active={isActive('/favorites')} theme={theme} text="Favorites" icon={<FaHeart size={14} />} />
@@ -191,8 +212,8 @@ function Navbar() {
             
             {/* Theme Toggle */}
             <motion.button
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.9 }}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
               onClick={() => dispatch(toggleTheme())}
               style={{
                 backgroundColor: isDarkMode ? 'rgba(255, 255, 255, 0.15)' : 'rgba(0, 0, 0, 0.1)',
@@ -209,26 +230,27 @@ function Navbar() {
                 boxShadow: isDarkMode ? shadows.dark.sm : shadows.light.sm
               }}
               aria-label={isDarkMode ? "Switch to light mode" : "Switch to dark mode"}
+              className="theme-toggle"
             >
               {isDarkMode ? (
                 <>
                   <FaSun size={16} style={{ color: '#FFD700' }} />
-                  <span style={{ fontSize: '0.85rem', fontWeight: '500' }}>Light</span>
+                  <span style={{ fontSize: '0.85rem', fontWeight: '500' }} className="toggle-text">Light</span>
                 </>
               ) : (
                 <>
                   <FaMoon size={14} style={{ color: '#6C5DD3' }} />
-                  <span style={{ fontSize: '0.85rem', fontWeight: '500' }}>Dark</span>
+                  <span style={{ fontSize: '0.85rem', fontWeight: '500' }} className="toggle-text">Dark</span>
                 </>
               )}
             </motion.button>
           </div>
           
           {/* Mobile Menu Button */}
-          <div className="mobile-menu-button" style={styles.mobileMenuButton}>
+          <div className="mobile-menu-button">
             <motion.button
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.9 }}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
               onClick={() => setMenuOpen(!menuOpen)}
               style={{
                 backgroundColor: 'transparent',
@@ -264,15 +286,16 @@ function Navbar() {
               top: 0,
               right: 0,
               bottom: 0,
-              width: '75%',
-              maxWidth: '300px',
+              width: '100%', 
+              maxWidth: '250px',
               backgroundColor: theme.background,
               boxShadow: isDarkMode ? shadows.dark.lg : shadows.light.lg,
               zIndex: 1100,
-              padding: '5rem 1.5rem 2rem',
+              padding: '4rem 1rem 1.5rem',
               display: 'flex',
               flexDirection: 'column',
-              gap: '1.5rem'
+              gap: '1.25rem',
+              overflowY: 'auto'
             }}
             className="mobile-menu"
           >
@@ -283,9 +306,9 @@ function Navbar() {
                   display: 'flex',
                   alignItems: 'center',
                   gap: '0.5rem',
-                  padding: '1rem',
+                  padding: '0.75rem',
                   backgroundColor: isActive('/') ? (isDarkMode ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.05)') : 'transparent',
-                  color: isActive('/') ? theme.accent : theme.text,
+                  color: isActive('/') ? '#f59e0b' : theme.text,
                   fontWeight: isActive('/') ? '600' : '500',
                   borderRadius: '8px',
                   textDecoration: 'none',
@@ -305,9 +328,9 @@ function Navbar() {
                   display: 'flex',
                   alignItems: 'center',
                   gap: '0.5rem',
-                  padding: '1rem',
+                  padding: '0.75rem',
                   backgroundColor: isActive('/favorites') ? (isDarkMode ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.05)') : 'transparent',
-                  color: isActive('/favorites') ? theme.accent : theme.text,
+                  color: isActive('/favorites') ? '#f59e0b' : theme.text,
                   fontWeight: isActive('/favorites') ? '600' : '500',
                   borderRadius: '8px',
                   textDecoration: 'none',
@@ -415,9 +438,11 @@ function Navbar() {
         
         .navbar {
           padding: ${scrolled ? '0.75rem 0' : '1rem 0'};
+          width: 100%;
         }
         
-        @media (max-width: 768px) {
+        /* Responsive breakpoints */
+        @media (max-width: 800px) {
           .desktop-nav {
             display: none;
           }
@@ -431,7 +456,7 @@ function Navbar() {
           }
         }
         
-        @media (max-width: 480px) {
+        @media (max-width: 600px) {
           .navbar {
             padding: ${scrolled ? '0.5rem 0' : '0.75rem 0'};
           }
@@ -439,18 +464,78 @@ function Navbar() {
           .brand-name {
             font-size: 1.1rem;
           }
+          
+          .container {
+            padding-left: 10px;
+            padding-right: 10px;
+          }
         }
         
-        @media (max-width: 320px) {
+        @media (max-width: 480px) {
           .brand-name {
-            font-size: 1rem;
+            font-size: 0.95rem;
+          }
+          
+          .navbar > div {
+            padding: 0 8px;
           }
           
           .mobile-menu {
-            width: 85%;
+            padding-top: 4rem;
+            max-width: 240px;
           }
         }
-      `
+        
+        @media (max-width: 400px) {
+          .brand-name {
+            font-size: 0.9rem;
+          }
+          
+          .mobile-menu-button button {
+            width: 36px;
+            height: 36px;
+          }
+        }
+        
+        @media (max-width: 360px) {
+          .brand-name span {
+            font-size: 0.85rem;
+          }
+          
+          .mobile-menu {
+            max-width: 220px;
+          }
+        }
+        
+        @media (max-width: 320px) {
+          .brand-name span {
+            font-size: 0.8rem;
+          }
+          
+          .mobile-menu-button button {
+            width: 32px;
+            height: 32px;
+          }
+          
+          .mobile-menu {
+            max-width: 200px;
+            padding-left: 8px;
+            padding-right: 8px;
+          }
+        }
+        
+        /* Add this to ensure theme toggle is always visible */
+        .theme-toggle {
+          min-width: fit-content;
+        }
+        
+        /* Hide text on very small screens but keep the icon */
+        @media (max-width: 360px) {
+          .toggle-text {
+            display: none;
+          }
+        }
+        `
       }} />
     </>
   );
