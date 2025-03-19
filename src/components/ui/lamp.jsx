@@ -190,7 +190,7 @@ export const LampContainer = ({
         position: 'relative',
         zIndex: 50,
         display: 'flex',
-        transform: 'translateY(-20rem)',
+        transform: 'translateY(-40vh)',
         flexDirection: 'column',
         alignItems: 'center',
         padding: '0 1.25rem'
