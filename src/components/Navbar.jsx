@@ -157,7 +157,7 @@ function Navbar() {
           top: 0,
           left: 0,
           right: 0,
-          zIndex: 1000,
+          zIndex: 9000,
           backgroundColor: scrolled ? theme.background : (isDarkMode ? 'rgba(18, 18, 18, 0.8)' : 'rgba(246, 246, 246, 0.8)'),
           backdropFilter: 'blur(10px)',
           boxShadow: scrolled ? (isDarkMode ? shadows.dark.sm : shadows.light.sm) : 'none',

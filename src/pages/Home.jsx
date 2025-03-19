@@ -19,6 +19,7 @@ function Home() {
   const [searchTerm, setSearchTerm] = useState(searchQuery || '');
   const [isInputFocused, setIsInputFocused] = useState(false);
   const [showScrollButton, setShowScrollButton] = useState(false);
+  const [pendingPageScroll, setPendingPageScroll] = useState(false);
   const favorites = useSelector((state) => state.favorites.favorites);
   const isDarkMode = useSelector((state) => state.theme.isDarkMode);
   const theme = isDarkMode ? colors.dark : colors.light;
@@ -31,10 +32,18 @@ function Home() {
     if (searchResults.length > 0 && status === 'succeeded') {
       // Show scroll button when results are available
       setShowScrollButton(true);
+      
+      // If we have a pending page scroll and results are loaded, execute the scroll
+      if (pendingPageScroll) {
+        if (resultsRef.current) {
+          resultsRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+        setPendingPageScroll(false);
+      }
     } else {
       setShowScrollButton(false);
     }
-  }, [searchResults, status]);
+  }, [searchResults, status, pendingPageScroll]);
 
   // Function to scroll to results
   const scrollToResults = () => {
@@ -102,6 +111,8 @@ function Home() {
         // Reset to page 1 when search term changes
         dispatch(setCurrentPage(1));
         dispatch(searchMovies({ query, page: 1 }));
+        // Set pending scroll flag for first search
+        setPendingPageScroll(true);
       } else {
         dispatch(clearSearchResults());
       }
@@ -116,8 +127,8 @@ function Home() {
       dispatch(setCurrentPage(newPage));
       dispatch(searchMovies({ query: searchTerm, page: newPage }));
       
-      // Scroll to results after changing page
-      scrollToResults();
+      // Set pending page scroll to true
+      setPendingPageScroll(true);
     }
   };
 
@@ -141,6 +152,21 @@ function Home() {
       debouncedSearch.cancel();
     };
   }, [debouncedSearch]);
+
+  // Track when search status changes to loading
+  useEffect(() => {
+    if (status === 'loading' && pendingPageScroll) {
+      // Add a class to the results container to indicate loading
+      if (resultsRef.current) {
+        resultsRef.current.classList.add('loading-results');
+      }
+    } else if (status === 'succeeded' && pendingPageScroll) {
+      // Remove loading class when results arrive
+      if (resultsRef.current) {
+        resultsRef.current.classList.remove('loading-results');
+      }
+    }
+  }, [status, pendingPageScroll]);
 
   // Render pagination controls
   const renderPagination = () => {
@@ -886,6 +912,27 @@ function Home() {
           @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
+          }
+          
+          .loading-results {
+            position: relative;
+          }
+          
+          .loading-results::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(to right, transparent, ${theme.teal}, transparent);
+            animation: shimmer 1.5s infinite;
+            z-index: 10;
+          }
+          
+          @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
           }
         `}
       </style>
