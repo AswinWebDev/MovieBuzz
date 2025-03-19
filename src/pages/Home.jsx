@@ -30,10 +30,10 @@ function Home() {
   // UseEffect to handle showing scroll button when results load
   useEffect(() => {
     if (searchResults.length > 0 && status === 'succeeded') {
-      // Show scroll button when results are available
+      // Show scroll button when results are available (for new searches)
       setShowScrollButton(true);
       
-      // If we have a pending page scroll and results are loaded, execute the scroll
+      // Only auto-scroll for pagination changes, not for new searches
       if (pendingPageScroll) {
         if (resultsRef.current) {
           resultsRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -111,8 +111,10 @@ function Home() {
         // Reset to page 1 when search term changes
         dispatch(setCurrentPage(1));
         dispatch(searchMovies({ query, page: 1 }));
-        // Set pending scroll flag for first search
-        setPendingPageScroll(true);
+        // For new searches, show the button but don't auto-scroll
+        setPendingPageScroll(false);
+        // Specifically show the scroll button for new searches
+        setShowScrollButton(true);
       } else {
         dispatch(clearSearchResults());
       }
