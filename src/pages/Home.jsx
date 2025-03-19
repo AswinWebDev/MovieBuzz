@@ -693,8 +693,6 @@ function Home() {
       <div className="hero-container" style={{
         position: 'relative',
         width: '100%',
-        minHeight: '40vh', 
-        maxHeight: '450px', 
         overflow: 'hidden'
       }}>
         {/* Properly using LampContainer with content as children */}
@@ -704,8 +702,7 @@ function Home() {
             zIndex: 2,
             width: '100%',
             textAlign: 'center',
-            marginTop: '4rem', 
-            paddingBottom: '0'
+            padding: '0 1rem'
           }}>
             <motion.h1
               initial={{ opacity: 0, y: 20 }}
@@ -791,11 +788,11 @@ function Home() {
         </LampContainer>
       </div>
 
-      {/* Movie Results Section - positioned much closer to search */}
+      {/* Movie Results Section - positioned below the lamp section */}
       <div className="movie-results-container" style={{ 
         padding: '0 1rem 1rem',
         maxWidth: '1280px',
-        margin: '60px auto 0', 
+        margin: '0 auto', 
         position: 'relative',
         zIndex: 5,
         backgroundColor: isDarkMode ? '#0f172a' : theme.background
