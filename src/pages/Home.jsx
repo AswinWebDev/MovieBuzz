@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo, useRef, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FaHeart, FaStar, FaSearch, FaChevronLeft, FaChevronRight, FaPlay, FaCalendarAlt, FaFilm, FaInfo, FaInfoCircle, FaArrowDown } from 'react-icons/fa';
 import debounce from 'lodash.debounce';
@@ -14,8 +14,9 @@ import { LampContainer } from '../components/ui/lamp';
 
 function Home() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   
-  const { searchResults, status, error, totalResults, currentPage, searchQuery } = useSelector((state) => state.movies);
+  const { searchResults, searchQuery, totalResults, status, error, currentPage } = useSelector((state) => state.movies);
   const [searchTerm, setSearchTerm] = useState(searchQuery || '');
   const [isInputFocused, setIsInputFocused] = useState(false);
   const [showScrollButton, setShowScrollButton] = useState(false);
@@ -149,6 +150,17 @@ function Home() {
     } else {
       dispatch(addToFavorites(movie));
     }
+  };
+
+  // Function to navigate to movie details with explicit scroll
+  const navigateToMovie = (movieId) => {
+    // First scroll to top
+    window.scrollTo(0, 0);
+    document.documentElement.scrollTop = 0;
+    document.body.scrollTop = 0;
+    
+    // Then navigate
+    navigate(`/movie/${movieId}`);
   };
 
   // Clear debounce on unmount
@@ -514,6 +526,10 @@ function Home() {
                       height: '100%',
                       position: 'relative',
                       zIndex: 1
+                    }}
+                    onClick={(e) => {
+                      e.preventDefault(); // Prevent default navigation
+                      navigateToMovie(movie.imdbID);
                     }}
                   >
                     <div style={{ 

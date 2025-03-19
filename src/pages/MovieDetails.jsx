@@ -33,8 +33,31 @@ function MovieDetails() {
     };
   }, []);
 
+  // Scroll to top immediately when the component is created
+  // This runs before the component is even mounted
+  if (typeof window !== 'undefined') {
+    window.scrollTo(0, 0);
+    document.documentElement.scrollTop = 0;
+    document.body.scrollTop = 0;
+  }
+
   // Fetch movie details on component mount
   useEffect(() => {
+    // Focus on scrolling to top as the FIRST priority
+    try {
+      // Use multiple approaches to ensure scroll works
+      window.scrollTo(0, 0);
+      window.scroll(0, 0);
+      document.documentElement.scrollTop = 0;
+      document.body.scrollTop = 0;
+      
+      // For Safari
+      document.querySelector('html').scrollTop = 0;
+    } catch (e) {
+      console.error('Error scrolling to top:', e);
+    }
+    
+    // Now fetch the movie details
     dispatch(fetchMovieDetails(id));
     
     // Clean up when component unmounts
