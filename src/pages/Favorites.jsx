@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
@@ -13,6 +13,11 @@ function Favorites() {
   const theme = isDarkMode ? colors.dark : colors.light;
   
   const dispatch = useDispatch();
+  
+  // Scroll to top when page loads
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
   
   const handleRemoveFavorite = (id) => {
     dispatch(removeFromFavorites(id));

@@ -6,6 +6,7 @@ import Home from './pages/Home';
 import MovieDetails from './pages/MovieDetails';
 import Favorites from './pages/Favorites';
 import ThemeProvider from './components/ThemeProvider';
+import ScrollToTop from './components/ScrollToTop';
 import './App.css';
 
 function App() {
@@ -13,6 +14,7 @@ function App() {
     <Provider store={store}>
       <ThemeProvider>
         <Router>
+          <ScrollToTop />
           <div className="app">
             <Navbar />
             <main>
