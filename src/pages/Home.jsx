@@ -1,8 +1,8 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useRef, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FaHeart, FaStar, FaSearch, FaChevronLeft, FaChevronRight, FaPlay, FaCalendarAlt, FaFilm, FaInfo, FaInfoCircle } from 'react-icons/fa';
+import { FaHeart, FaStar, FaSearch, FaChevronLeft, FaChevronRight, FaPlay, FaCalendarAlt, FaFilm, FaInfo, FaInfoCircle, FaArrowDown } from 'react-icons/fa';
 import debounce from 'lodash.debounce';
 import { addToFavorites, removeFromFavorites } from '../store/favoritesSlice';
 import { searchMovies, clearSearchResults, setCurrentPage } from '../store/movieSlice';
@@ -18,9 +18,32 @@ function Home() {
   const { searchResults, status, error, totalResults, currentPage, searchQuery } = useSelector((state) => state.movies);
   const [searchTerm, setSearchTerm] = useState(searchQuery || '');
   const [isInputFocused, setIsInputFocused] = useState(false);
+  const [showScrollButton, setShowScrollButton] = useState(false);
   const favorites = useSelector((state) => state.favorites.favorites);
   const isDarkMode = useSelector((state) => state.theme.isDarkMode);
   const theme = isDarkMode ? colors.dark : colors.light;
+
+  // Create ref for the search results section
+  const resultsRef = useRef(null);
+
+  // UseEffect to handle showing scroll button when results load
+  useEffect(() => {
+    if (searchResults.length > 0 && status === 'succeeded') {
+      // Show scroll button when results are available
+      setShowScrollButton(true);
+    } else {
+      setShowScrollButton(false);
+    }
+  }, [searchResults, status]);
+
+  // Function to scroll to results
+  const scrollToResults = () => {
+    if (resultsRef.current) {
+      resultsRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      // Hide the button after scrolling
+      setShowScrollButton(false);
+    }
+  };
 
   // Calculate pagination info
   const resultsPerPage = 10; // OMDb API returns 10 results per page
@@ -65,6 +88,13 @@ function Home() {
     }
   }, [searchQuery, searchResults.length, currentPage, dispatch, status]);
 
+  // Handle search input change
+  const handleSearchChange = (e) => {
+    const value = e.target.value;
+    setSearchTerm(value);
+    debouncedSearch(value);
+  };
+
   // Debounce search input
   const debouncedSearch = useMemo(
     () => debounce((query) => {
@@ -79,13 +109,6 @@ function Home() {
     [dispatch]
   );
 
-  // Handle search input change
-  const handleSearchChange = (e) => {
-    const value = e.target.value;
-    setSearchTerm(value);
-    debouncedSearch(value);
-  };
-
   // Handle page change
   const handlePageChange = (newPage) => {
     if (newPage >= 1 && newPage <= totalPages) {
@@ -93,11 +116,8 @@ function Home() {
       dispatch(setCurrentPage(newPage));
       dispatch(searchMovies({ query: searchTerm, page: newPage }));
       
-      // Smooth scroll just the results container into view
-      const resultsContainer = document.querySelector('.movie-results-container');
-      if (resultsContainer) {
-        resultsContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }
+      // Scroll to results after changing page
+      scrollToResults();
     }
   };
 
@@ -789,16 +809,76 @@ function Home() {
       </div>
 
       {/* Movie Results Section - positioned below the lamp section */}
-      <div className="movie-results-container" style={{ 
-        padding: '0 1rem 1rem',
-        maxWidth: '1280px',
-        margin: '0 auto', 
-        position: 'relative',
-        zIndex: 5,
-        backgroundColor: isDarkMode ? '#0f172a' : theme.background
-      }}>
+      <div 
+        className="movie-results-container" 
+        ref={resultsRef}
+        style={{ 
+          padding: '0 1rem 1rem',
+          maxWidth: '1280px',
+          margin: '0 auto', 
+          position: 'relative',
+          zIndex: 5,
+          backgroundColor: isDarkMode ? '#0f172a' : theme.background
+        }}
+      >
         {renderMovieResults()}
       </div>
+
+      {/* Scroll to results button */}
+      <AnimatePresence>
+        {showScrollButton && (
+          <motion.button
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ 
+              opacity: 1, 
+              y: 0,
+              transition: { duration: 0.3 }
+            }}
+            exit={{ 
+              opacity: 0, 
+              y: 20,
+              transition: { duration: 0.2 }
+            }}
+            whileHover={{ 
+              scale: 1.05,
+              boxShadow: isDarkMode ? shadows.dark.md : shadows.light.md
+            }}
+            whileTap={{ scale: 0.95 }}
+            onClick={scrollToResults}
+            style={{
+              position: 'fixed',
+              bottom: '2rem',
+              right: '2rem',
+              backgroundColor: theme.primary,
+              color: '#ffffff',
+              border: 'none',
+              borderRadius: '50%',
+              width: '3.5rem',
+              height: '3.5rem',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              cursor: 'pointer',
+              zIndex: 100,
+              boxShadow: isDarkMode ? shadows.dark.md : shadows.light.md,
+              transition: transitions.default
+            }}
+          >
+            <motion.div
+              animate={{ 
+                y: [0, 5, 0],
+                transition: { 
+                  repeat: Infinity, 
+                  duration: 1.5,
+                  ease: "easeInOut" 
+                }
+              }}
+            >
+              <FaArrowDown size={20} />
+            </motion.div>
+          </motion.button>
+        )}
+      </AnimatePresence>
 
       {/* Add a keyframes style for the loader animation */}
       <style>
