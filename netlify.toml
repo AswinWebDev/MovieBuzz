@@ -1,0 +1,10 @@
+[build]
+  publish = "build"
+  command = "npm run build"
+
+# This is crucial - it tells Netlify to serve the index.html file for any route
+# So when someone refreshes on /movie/123, Netlify serves index.html instead of a 404
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
