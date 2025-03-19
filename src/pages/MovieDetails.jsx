@@ -402,8 +402,8 @@ function MovieDetails() {
                     : "3.5rem",
                 fontWeight: "800",
                 marginBottom: "0.5rem",
-                color: isDarkMode ? "#fff" : "#1e293b",
-                textShadow: "0 2px 10px rgba(0, 0, 0, 0.7)",
+                color: isDarkMode ? "#fff" : theme.teal,
+                textShadow: "0 2px 10px rgba(0, 0, 0, 0.5)",
                 fontFamily: fonts.heading,
                 lineHeight: 1.1,
               }}
