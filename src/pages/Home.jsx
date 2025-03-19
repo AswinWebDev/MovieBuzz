@@ -19,6 +19,7 @@ function Home() {
   const [searchTerm, setSearchTerm] = useState(searchQuery || '');
   const [isInputFocused, setIsInputFocused] = useState(false);
   const [showScrollButton, setShowScrollButton] = useState(false);
+  const [hasScrolledToResults, setHasScrolledToResults] = useState(false);
   const [pendingPageScroll, setPendingPageScroll] = useState(false);
   const favorites = useSelector((state) => state.favorites.favorites);
   const isDarkMode = useSelector((state) => state.theme.isDarkMode);
@@ -27,21 +28,36 @@ function Home() {
   // Create ref for the search results section
   const resultsRef = useRef(null);
 
-  // UseEffect to handle showing scroll button when results load
+  // Add scroll event listener to hide button when scrolled to bottom
   useEffect(() => {
-    if (searchResults.length > 0 && status === 'succeeded') {
-      // Show scroll button when results are available (for new searches)
-      setShowScrollButton(true);
+    const handleScroll = () => {
+      if (!showScrollButton) return; // Don't do anything if button is already hidden
       
-      // Only auto-scroll for pagination changes, not for new searches
-      if (pendingPageScroll) {
-        if (resultsRef.current) {
-          resultsRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
-        setPendingPageScroll(false);
+      // If we've scrolled close to bottom, hide the button
+      const bottomOfPage = Math.max(
+        document.body.scrollHeight, 
+        document.body.offsetHeight
+      );
+      const currentPosition = window.innerHeight + window.pageYOffset;
+      
+      // If we're within 300px of the bottom, hide the button
+      if (currentPosition >= bottomOfPage - 300) {
+        setShowScrollButton(false);
       }
-    } else {
-      setShowScrollButton(false);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [showScrollButton]);
+
+  // Handle auto-scroll for pagination
+  useEffect(() => {
+    if (pendingPageScroll && searchResults.length > 0 && status === 'succeeded') {
+      // Auto-scroll for pagination, but don't show the button
+      if (resultsRef.current) {
+        resultsRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+      setPendingPageScroll(false);
     }
   }, [searchResults, status, pendingPageScroll]);
 
@@ -51,37 +67,17 @@ function Home() {
       resultsRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
       // Hide the button after scrolling
       setShowScrollButton(false);
+      setHasScrolledToResults(true);
     }
   };
 
-  // Calculate pagination info
-  const resultsPerPage = 10; // OMDb API returns 10 results per page
-  const totalPages = Math.ceil(totalResults / resultsPerPage);
-
-  // Animation variants
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: { 
-      opacity: 1,
-      transition: { 
-        staggerChildren: 0.1
-      }
+  // Track whether user has manually scrolled to results already
+  useEffect(() => {
+    if (searchResults.length > 0 && !hasScrolledToResults) {
+      setShowScrollButton(true);
     }
-  };
+  }, [searchResults.length, hasScrolledToResults]);
 
-  const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: { 
-      opacity: 1, 
-      y: 0,
-      transition: {
-        type: 'spring',
-        stiffness: 100,
-        damping: 12
-      }
-    }
-  };
-  
   // When searchQuery updates from redux, update local searchTerm
   useEffect(() => {
     if (searchQuery) {
@@ -111,9 +107,12 @@ function Home() {
         // Reset to page 1 when search term changes
         dispatch(setCurrentPage(1));
         dispatch(searchMovies({ query, page: 1 }));
-        // For new searches, show the button but don't auto-scroll
+        
+        // Always reset these for a new search
         setPendingPageScroll(false);
-        // Specifically show the scroll button for new searches
+        setHasScrolledToResults(false);
+        
+        // Explicitly show the button for all new searches
         setShowScrollButton(true);
       } else {
         dispatch(clearSearchResults());
@@ -122,6 +121,10 @@ function Home() {
     [dispatch]
   );
 
+  // Calculate pagination info
+  const resultsPerPage = 10; // OMDb API returns 10 results per page
+  const totalPages = Math.ceil(totalResults / resultsPerPage);
+
   // Handle page change
   const handlePageChange = (newPage) => {
     if (newPage >= 1 && newPage <= totalPages) {
@@ -129,7 +132,7 @@ function Home() {
       dispatch(setCurrentPage(newPage));
       dispatch(searchMovies({ query: searchTerm, page: newPage }));
       
-      // Set pending page scroll to true
+      // For pagination, we want to auto-scroll but not show button
       setPendingPageScroll(true);
     }
   };
@@ -175,13 +178,15 @@ function Home() {
     if (totalPages <= 1) return null;
     
     return (
-      <div style={{ 
-        display: 'flex', 
-        justifyContent: 'center', 
-        alignItems: 'center',
-        marginTop: '2rem',
-        gap: '1rem'
-      }}>
+      <div 
+        className="pagination-container"
+        style={{ 
+          display: 'flex', 
+          justifyContent: 'center', 
+          alignItems: 'center',
+          marginTop: '2rem',
+          gap: '1rem'
+        }}>
         <motion.button
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
@@ -423,7 +428,10 @@ function Home() {
 
           <motion.div
             key={`search-results-page-${currentPage}`}
-            variants={containerVariants}
+            variants={{
+              hidden: { opacity: 0, y: 20 },
+              visible: { opacity: 1, y: 0 }
+            }}
             initial="hidden"
             animate="visible"
             style={{
@@ -436,7 +444,18 @@ function Home() {
             {searchResults.map((movie) => (
               <motion.div
                 key={movie.imdbID}
-                variants={itemVariants}
+                variants={{
+                  hidden: { opacity: 0, y: 20 },
+                  visible: { 
+                    opacity: 1, 
+                    y: 0,
+                    transition: {
+                      type: 'spring',
+                      stiffness: 100,
+                      damping: 12
+                    }
+                  }
+                }}
                 style={{
                   backgroundColor: 'transparent',
                   borderRadius: '16px',
@@ -729,6 +748,26 @@ function Home() {
     return null;
   };
 
+  // Return to the original button styling
+  const buttonStyle = {
+    position: 'fixed',
+    bottom: '2rem',
+    right: '2rem',
+    backgroundColor: isDarkMode ? 'rgba(255, 255, 255, 0.15)' : 'rgba(0, 0, 0, 0.1)',
+    color: theme.teal,
+    border: 'none',
+    borderRadius: '50%',
+    width: '3.5rem',
+    height: '3.5rem',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    cursor: 'pointer',
+    zIndex: 100,
+    boxShadow: isDarkMode ? shadows.dark.md : shadows.light.md,
+    transition: transitions.default
+  };
+
   return (
     <div style={{
       backgroundColor: isDarkMode ? '#0f172a' : theme.background,
@@ -873,24 +912,7 @@ function Home() {
             }}
             whileTap={{ scale: 0.95 }}
             onClick={scrollToResults}
-            style={{
-              position: 'fixed',
-              bottom: '2rem',
-              right: '2rem',
-              backgroundColor: isDarkMode ? 'rgba(255, 255, 255, 0.15)' : 'rgba(0, 0, 0, 0.1)',
-              color: theme.teal,
-              border: 'none',
-              borderRadius: '50%',
-              width: '3.5rem',
-              height: '3.5rem',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              cursor: 'pointer',
-              zIndex: 100,
-              boxShadow: isDarkMode ? shadows.dark.md : shadows.light.md,
-              transition: transitions.default
-            }}
+            style={buttonStyle}
           >
             <motion.div
               animate={{ 
