@@ -2,7 +2,8 @@ import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FaSun, FaMoon, FaHeart, FaFilm, FaBars, FaTimes, FaChevronRight, FaArrowRight } from 'react-icons/fa';
+import { FaSun, FaMoon, FaHeart, FaBars, FaTimes, FaChevronRight, FaArrowRight } from 'react-icons/fa';
+import { PiFilmReelFill, PiTelevisionSimpleFill, PiHouseLineFill } from 'react-icons/pi';
 import { toggleTheme } from '../store/themeSlice';
 import { colors, fonts, shadows, transitions } from '../styles/theme';
 
@@ -183,7 +184,7 @@ function Navbar() {
               animate={{ rotate: 0 }}
               transition={{ duration: 0.5 }}
             >
-              <FaFilm size={24} style={{ color: theme.accent, marginRight: '0.5rem' }} />
+              <PiFilmReelFill size={28} style={{ color: theme.accent, marginRight: '0.5rem' }} />
             </motion.div>
             <motion.span
               initial={{ opacity: 0, x: -10 }}
@@ -346,7 +347,7 @@ function Navbar() {
                 }}
                 onClick={() => setMenuOpen(false)}
               >
-                <FaFilm size={16} />
+                <PiHouseLineFill size={16} />
                 <span>Home</span>
               </Link>
             </motion.div>
